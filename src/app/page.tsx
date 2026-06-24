@@ -20,12 +20,26 @@ import {
   TestimonialCard,
   Timeline,
 } from "@/components";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { amcPlans, images, processSteps, services, standards, stats, testimonials } from "@/lib/site-data";
 
 export default function HomePage() {
   return (
     <SiteFrame activeHref="/">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Horexa Solutions",
+          url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://horexasolutions.com",
+          image: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://horexasolutions.com"}${images.hero}`,
+          telephone: "+91 98765 43210",
+          areaServed: ["Delhi NCR", "Mumbai", "Bangalore", "Hyderabad", "Pune", "Chennai"],
+          slogan: "Clean Air. Safe Kitchens.",
+          description: "Commercial kitchen hygiene, exhaust duct cleaning, AMC plans, and compliance reporting across India.",
+        }}
+      />
       <HeroSection
         eyebrow="Prevent. Clean. Protect."
         title="Modern Hygiene Standards for Hospitality Spaces"

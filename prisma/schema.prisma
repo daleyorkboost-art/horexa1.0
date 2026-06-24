@@ -56,6 +56,22 @@ enum NotificationType {
   SYSTEM
 }
 
+enum CategoryType {
+  SERVICE
+  PROJECT
+  BLOG
+  CAREER
+  DOCUMENT
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -72,9 +88,14 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
+  otpTokens     OTPToken[]
+  passwordResetTokens PasswordResetToken[]
   adminProfile  Admin?
   clientProfile Client?
   notifications Notification[]
+
+  @@index([role])
+  @@index([isActive])
 }
 
 model Account {
@@ -125,6 +146,34 @@ model Admin {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model OTPToken {
+  id         String   @id @default(cuid())
+  userId     String?
+  identifier String
+  tokenHash  String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([identifier])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+}
+
 model Client {
   id              String   @id @default(cuid())
   userId          String?  @unique
@@ -147,7 +196,30 @@ model Client {
   inspectionReports InspectionReport[]
   complianceRecords ComplianceRecord[]
   documents         Document[]
-  supportTickets    SupportTicket[]
+  tickets           Ticket[]
+  invoices          Invoice[]
+
+  @@index([status])
+  @@index([city])
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  type        CategoryType
+  description String?
+  status      RecordStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  services  Service[]
+  projects  Project[]
+  blogPosts BlogPost[]
+  careers   Career[]
+
+  @@index([type])
+  @@index([status])
 }
 
 model Service {
@@ -157,6 +229,7 @@ model Service {
   summary     String
   description String       @db.Text
   category    String
+  categoryId  String?
   icon        String?
   imageUrl    String?
   sortOrder   Int          @default(0)
@@ -166,8 +239,13 @@ model Service {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   projects  Project[]
   inquiries Inquiry[]
+
+  @@index([status])
+  @@index([category])
+  @@index([sortOrder])
 }
 
 model Project {
@@ -179,6 +257,7 @@ model Project {
   kitchenType String?
   greaseLevel String?
   category    String
+  categoryId  String?
   serviceId   String?
   beforeImageUrl String?
   afterImageUrl  String?
@@ -189,7 +268,12 @@ model Project {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([category])
+  @@index([featured])
 }
 
 model AMCPlan {
@@ -208,6 +292,9 @@ model AMCPlan {
 
   clients   Client[]
   inquiries Inquiry[]
+
+  @@index([status])
+  @@index([recommended])
 }
 
 model Inquiry {
@@ -230,6 +317,10 @@ model Inquiry {
   service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
   amcPlan AMCPlan? @relation(fields: [amcPlanId], references: [id], onDelete: SetNull)
   client  Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
 }
 
 model BlogPost {
@@ -239,6 +330,7 @@ model BlogPost {
   excerpt     String
   content     String       @db.Text
   category    String
+  categoryId  String?
   tags        String[]     @default([])
   imageUrl    String?
   readTime    String?
@@ -249,6 +341,13 @@ model BlogPost {
   seoDescription String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([category])
+  @@index([featured])
+  @@index([publishedAt])
 }
 
 model Career {
@@ -256,6 +355,7 @@ model Career {
   title       String
   slug        String       @unique
   location    String
+  categoryId  String?
   type        String
   experience  String
   description String       @db.Text
@@ -263,7 +363,11 @@ model Career {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   applications Application[]
+
+  @@index([status])
+  @@index([location])
 }
 
 model Application {
@@ -281,6 +385,9 @@ model Application {
 
   career Career? @relation(fields: [careerId], references: [id], onDelete: SetNull)
   client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Testimonial {
@@ -296,6 +403,10 @@ model Testimonial {
   sortOrder   Int          @default(0)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  @@index([status])
+  @@index([featured])
+  @@index([sortOrder])
 }
 
 model InspectionReport {
@@ -317,6 +428,11 @@ model InspectionReport {
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
   complianceRecords ComplianceRecord[]
+
+  @@index([clientId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([completedAt])
 }
 
 model ComplianceRecord {
@@ -333,6 +449,10 @@ model ComplianceRecord {
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
   report InspectionReport? @relation(fields: [reportId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([category])
+  @@index([status])
 }
 
 model Document {
@@ -349,9 +469,34 @@ model Document {
   updatedAt   DateTime     @updatedAt
 
   client Client? @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([category])
+  @@index([status])
 }
 
-model SupportTicket {
+model Invoice {
+  id          String        @id @default(cuid())
+  clientId    String?
+  invoiceNo   String        @unique
+  amount      Decimal       @db.Decimal(12, 2)
+  currency    String        @default("INR")
+  status      InvoiceStatus @default(DRAFT)
+  dueDate     DateTime?
+  paidAt      DateTime?
+  pdfUrl      String?
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model Ticket {
   id          String         @id @default(cuid())
   clientId    String?
   subject     String
@@ -363,6 +508,11 @@ model SupportTicket {
   updatedAt   DateTime       @updatedAt
 
   client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
 }
 
 model Notification {
@@ -376,4 +526,8 @@ model Notification {
   createdAt DateTime         @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([readAt])
 }

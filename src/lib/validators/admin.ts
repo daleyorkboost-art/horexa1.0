@@ -167,6 +167,26 @@ export const notificationSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+export const categorySchema = z.object({
+  name: z.string().min(2),
+  slug: z.string().min(2),
+  type: z.enum(["SERVICE", "PROJECT", "BLOG", "CAREER", "DOCUMENT"]),
+  description: z.string().optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "ACTIVE", "INACTIVE", "ARCHIVED"]).optional(),
+});
+
+export const invoiceSchema = z.object({
+  clientId: z.string().optional(),
+  invoiceNo: z.string().min(2),
+  amount: z.number().positive(),
+  currency: z.string().default("INR").optional(),
+  status: z.enum(["DRAFT", "SENT", "PAID", "OVERDUE", "CANCELLED"]).optional(),
+  dueDate: z.string().datetime().optional(),
+  paidAt: z.string().datetime().optional(),
+  pdfUrl: z.string().url().optional(),
+  notes: z.string().optional(),
+});
+
 export const userCreateSchema = z.object({
   name: z.string().min(2).optional(),
   email: z.string().email(),
@@ -177,3 +197,21 @@ export const userCreateSchema = z.object({
 });
 
 export const userUpdateSchema = userCreateSchema.partial();
+
+export const otpRequestSchema = z.object({
+  identifier: z.string().min(5),
+});
+
+export const otpVerifySchema = z.object({
+  identifier: z.string().min(5),
+  otp: z.string().length(6),
+});
+
+export const passwordResetRequestSchema = z.object({
+  email: z.string().email(),
+});
+
+export const passwordResetConfirmSchema = z.object({
+  token: z.string().min(20),
+  password: z.string().min(8),
+});

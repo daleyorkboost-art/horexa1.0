@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,8 +18,47 @@ const services = [
 ];
 
 export function ContactForm() {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("submitting");
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      fullName: String(formData.get("name") ?? ""),
+      businessName: String(formData.get("business") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
+      city: String(formData.get("city") ?? ""),
+      message: String(formData.get("message") ?? ""),
+      sourcePage: typeof window !== "undefined" ? window.location.pathname : "website",
+    };
+
+    try {
+      const response = await fetch("/api/public/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to submit inquiry");
+      }
+
+      event.currentTarget.reset();
+      setStatus("success");
+      setMessage("Inquiry sent successfully. Horexa will contact you shortly.");
+    } catch {
+      setStatus("error");
+      setMessage("Something went wrong. Please call or WhatsApp Horexa directly.");
+    }
+  }
+
   return (
-    <form className="surface-card flex flex-col gap-5 p-6 md:p-8">
+    <form className="surface-card flex flex-col gap-5 p-6 md:p-8" onSubmit={handleSubmit}>
       <div>
         <h2 className="text-h3 font-black">Send an Inquiry</h2>
         <p className="mt-2 text-sm text-muted-foreground">Share a few details and the Horexa team will respond quickly.</p>
@@ -57,8 +97,14 @@ export function ContactForm() {
         <Textarea id="message" name="message" placeholder="How can we help you?" required />
       </Field>
 
-      <Button type="submit" size="lg">
-        Send Inquiry
+      {message ? (
+        <div className={status === "success" ? "rounded-lg border border-success/30 bg-success/10 p-4 text-sm text-success" : "rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning"}>
+          {message}
+        </div>
+      ) : null}
+
+      <Button type="submit" size="lg" disabled={status === "submitting"}>
+        {status === "submitting" ? "Sending..." : "Send Inquiry"}
         <Send data-icon="inline-end" />
       </Button>
     </form>

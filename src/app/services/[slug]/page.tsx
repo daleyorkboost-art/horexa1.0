@@ -11,6 +11,7 @@ import {
   SiteFrame,
   Timeline,
 } from "@/components";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -46,6 +47,33 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
 
   return (
     <SiteFrame activeHref="/services">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: service.title,
+          description: service.longDescription,
+          provider: {
+            "@type": "LocalBusiness",
+            name: "Horexa Solutions",
+          },
+          areaServed: "India",
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: service.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }}
+      />
       <PageHero
         activeLabel={service.shortTitle}
         eyebrow="Service Detail"

@@ -11,7 +11,7 @@ export async function GET() {
   const client = auth.role === "CLIENT" && userId ? await prisma.client.findUnique({ where: { userId } }) : null;
   const where = client ? { clientId: client.id } : undefined;
 
-  const tickets = await prisma.supportTicket.findMany({
+  const tickets = await prisma.ticket.findMany({
     where,
     orderBy: { createdAt: "desc" },
   });
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const userId = auth.session.user?.id;
     const client = auth.role === "CLIENT" && userId ? await prisma.client.findUnique({ where: { userId } }) : null;
 
-    const ticket = await prisma.supportTicket.create({
+    const ticket = await prisma.ticket.create({
       data: {
         ...data,
         clientId: data.clientId ?? client?.id,

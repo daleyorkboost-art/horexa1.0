@@ -31,7 +31,7 @@ export async function GET() {
   const clientWhere = client ? { clientId: client.id } : undefined;
   const [totalInspections, openTickets, recentInspections, compliance, documents] = await Promise.all([
     prisma.inspectionReport.count({ where: clientWhere }),
-    prisma.supportTicket.count({ where: { ...clientWhere, status: { in: ["OPEN", "WAITING"] } } }),
+    prisma.ticket.count({ where: { ...clientWhere, status: { in: ["OPEN", "WAITING"] } } }),
     prisma.inspectionReport.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),
     prisma.complianceRecord.findMany({ where: clientWhere, take: 8, orderBy: { checkedAt: "desc" } }),
     prisma.document.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),

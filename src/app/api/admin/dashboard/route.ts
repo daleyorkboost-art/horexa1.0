@@ -22,7 +22,7 @@ export async function GET() {
     prisma.inquiry.count(),
     prisma.project.count({ where: { status: "ACTIVE" } }),
     prisma.application.count(),
-    prisma.supportTicket.count({ where: { status: { in: ["OPEN", "WAITING"] } } }),
+    prisma.ticket.count({ where: { status: { in: ["OPEN", "WAITING"] } } }),
     prisma.inquiry.findMany({ take: 5, orderBy: { createdAt: "desc" } }),
     prisma.notification.findMany({ take: 8, orderBy: { createdAt: "desc" } }),
   ]);
