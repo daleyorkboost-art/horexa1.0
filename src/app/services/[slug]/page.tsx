@@ -76,7 +76,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
       />
       <PageHero
         activeLabel={service.shortTitle}
-        eyebrow="Service Detail"
+        eyebrow="Service Scope"
         title={service.title}
         highlight="by Horexa"
         description={service.longDescription}
@@ -87,7 +87,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         <div className="industrial-container grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
           <div className="flex flex-col gap-16">
             <section>
-              <SectionHeading align="left" eyebrow="Benefits" title="Fast, visible impact for safer kitchens." />
+              <SectionHeading align="left" eyebrow="Business Benefit" title="Visible improvements with documented safety value." />
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
                 {service.benefits.map((benefit) => (
                   <Card key={benefit} className="flex items-center gap-4 p-5">
@@ -101,7 +101,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             </section>
 
             <section>
-              <SectionHeading align="left" eyebrow="What's Included" title="A complete service scope." />
+              <SectionHeading align="left" eyebrow="What's Included" title="Clear scope from inspection to handover." />
               <Card className="mt-8 p-6">
                 <ul className="grid gap-4 md:grid-cols-2">
                   {service.includes.map((item) => (
@@ -115,7 +115,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             </section>
 
             <section>
-              <SectionHeading align="left" eyebrow="Statistics" title="Why this service matters." />
+              <SectionHeading align="left" eyebrow="Operational Signals" title="Why this service matters to facility teams." />
               <div className="mt-8 grid gap-5 sm:grid-cols-3">
                 {stats.slice(0, 3).map((stat) => (
                   <AnimatedCounter key={stat.label} {...stat} />
@@ -124,14 +124,14 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             </section>
 
             <section>
-              <SectionHeading align="left" eyebrow="Process" title="Six steps from inspection to report." />
+              <SectionHeading align="left" eyebrow="Process" title="A controlled workflow from inspection to report." />
               <div className="mt-8">
                 <Timeline steps={processSteps} />
               </div>
             </section>
 
             <section>
-              <SectionHeading align="left" eyebrow="Industries" title="Built for every hospitality format." />
+              <SectionHeading align="left" eyebrow="Industries" title="Adapted to each kitchen format and risk level." />
               <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {industries.map((industry) => (
                   <FeatureCard key={industry.title} icon={industry.icon} title={industry.title} description="Service scopes can be adjusted to operating hours, kitchen volume, and compliance needs." />
@@ -168,7 +168,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               <form className="mt-6 flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="service-name">Name</Label>
-                  <Input id="service-name" placeholder="John Doe" />
+                  <Input id="service-name" placeholder="Rahul Mehra" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="service-phone">Phone</Label>

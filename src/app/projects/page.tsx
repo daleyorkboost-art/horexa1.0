@@ -7,10 +7,10 @@ export default function ProjectsPage() {
     <SiteFrame activeHref="/projects">
       <PageHero
         activeLabel="Our Projects"
-        eyebrow="Portfolio"
-        title="Our Track Record of"
-        highlight="Excellence"
-        description="Explore impactful hygiene and maintenance projects across the hospitality industry."
+        eyebrow="Project Evidence"
+        title="Commercial kitchens cleaned,"
+        highlight="documented and handed over"
+        description="Selected examples of exhaust restoration, ventilation hygiene and AMC rollouts across hotels, restaurants, cloud kitchens and hospitals."
         imageSrc={images.projects}
         centered
       />
@@ -18,9 +18,9 @@ export default function ProjectsPage() {
       <section className="py-20">
         <div className="industrial-container">
           <SectionHeading
-            eyebrow="Portfolio Grid"
-            title="Before, After, and Everything Between"
-            description="Filter realistic placeholder projects by category and review visual cleaning outcomes."
+            eyebrow="Case Examples"
+            title="Field work with measurable handovers"
+            description="Review projects by asset type, grease level, duration and service scope to understand how Horexa plans work around live operations."
           />
           <div className="mt-12">
             <ProjectsFilter />
@@ -28,7 +28,10 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      <CTASection title="Want similar results in your kitchen?" />
+      <CTASection
+        title="Need this level of documentation for your site?"
+        description="Book a site inspection and Horexa will map grease load, access constraints, service frequency and reporting requirements before quoting."
+      />
     </SiteFrame>
   );
 }

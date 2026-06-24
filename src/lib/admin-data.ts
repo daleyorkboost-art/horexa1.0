@@ -56,11 +56,11 @@ export const adminNav = [
 ];
 
 export const adminMetrics = [
-  { label: "Today's Inquiries", value: "14", helper: "+22% vs yesterday", icon: MessageSquare, tone: "primary" },
-  { label: "Total Leads", value: "1,284", helper: "248 converted", icon: FileSearch, tone: "success" },
-  { label: "Active Projects", value: "32", helper: "8 due this week", icon: BriefcaseBusiness, tone: "warning" },
-  { label: "Website Traffic", value: "48.6K", helper: "30 day visitors", icon: BarChart3, tone: "primary" },
-  { label: "Applications", value: "76", helper: "11 new this week", icon: Users, tone: "success" },
+  { label: "New Inspection Requests", value: "14", helper: "6 AMC-qualified", icon: MessageSquare, tone: "primary" },
+  { label: "Active AMC Clients", value: "104", helper: "18 renewals due in 30 days", icon: FileSearch, tone: "success" },
+  { label: "Scheduled Site Visits", value: "32", helper: "8 night windows this week", icon: BriefcaseBusiness, tone: "warning" },
+  { label: "Compliance Reports", value: "486", helper: "30 day uploads", icon: BarChart3, tone: "primary" },
+  { label: "Open Applications", value: "76", helper: "11 technician profiles", icon: Users, tone: "success" },
 ];
 
 const now = "Jun 24, 2026";
@@ -70,7 +70,7 @@ export const adminModules: AdminModule[] = [
     key: "services",
     title: "Service Management",
     href: "/admin/services",
-    description: "Add, edit, publish, and organize public service pages and detail content.",
+    description: "Manage service scopes, compliance angles, operating benefits and page-level content.",
     icon: Wrench,
     primaryAction: "Add Service",
     filters: ["All", "Published", "Draft", "Compliance", "Maintenance"],
@@ -78,37 +78,37 @@ export const adminModules: AdminModule[] = [
     rows: [
       { id: "SRV-001", title: "Kitchen Exhaust Duct Cleaning", category: "Exhaust", status: "Published", owner: "Admin", updated: now, metric: "1,820 views" },
       { id: "SRV-002", title: "Hood & Filter Cleaning", category: "Cleaning", status: "Published", owner: "Admin", updated: "Jun 20, 2026", metric: "940 views" },
-      { id: "SRV-003", title: "Water Tank Cleaning", category: "Water Hygiene", status: "Draft", owner: "Ops", updated: "Jun 18, 2026", metric: "320 views" },
+      { id: "SRV-003", title: "Water Tank Cleaning", category: "Water Hygiene", status: "Published", owner: "Ops", updated: "Jun 18, 2026", metric: "320 views" },
     ],
   },
   {
     key: "projects",
     title: "Project Management",
     href: "/admin/projects",
-    description: "Manage portfolio projects, before/after images, categories, and case study details.",
+    description: "Manage commercial case studies, before/after assets, locations and service outcomes.",
     icon: BriefcaseBusiness,
     primaryAction: "Add Project",
     filters: ["All", "Active", "Completed", "Featured", "Draft"],
     columns: ["id", "title", "category", "status", "owner", "updated"],
     rows: [
-      { id: "PRJ-118", title: "Five-Star Hotel Exhaust Restoration", category: "Duct Cleaning", status: "Featured", owner: "Arvind", updated: now, metric: "42 photos" },
-      { id: "PRJ-117", title: "Cloud Kitchen Deep Degreasing", category: "Ventilation", status: "Completed", owner: "Neha", updated: "Jun 19, 2026", metric: "18 photos" },
-      { id: "PRJ-116", title: "Hospital Kitchen AMC Rollout", category: "AMC", status: "Active", owner: "Ravi", updated: "Jun 17, 2026", metric: "3 sites" },
+      { id: "PRJ-118", title: "Taj Business Hotel Exhaust Restoration", category: "Duct Cleaning", status: "Featured", owner: "Arvind", updated: now, metric: "42 photos" },
+      { id: "PRJ-117", title: "Whitefield Cloud Kitchen Ventilation Hygiene", category: "Ventilation", status: "Completed", owner: "Neha", updated: "Jun 19, 2026", metric: "18 photos" },
+      { id: "PRJ-116", title: "Delhi NCR Hospital Kitchen Compliance Audit", category: "AMC", status: "Active", owner: "Ravi", updated: "Jun 17, 2026", metric: "3 sites" },
     ],
   },
   {
     key: "amc",
     title: "AMC Plan Management",
     href: "/admin/amc",
-    description: "Update AMC plans, recommended badges, service frequencies, and feature bullets.",
+    description: "Update AMC programs, visit frequency, service inclusions, reporting commitments and renewal notes.",
     icon: ShieldCheck,
     primaryAction: "Add AMC Plan",
     filters: ["All", "Active", "Recommended", "Custom"],
     columns: ["id", "title", "category", "status", "owner", "updated", "metric"],
     rows: [
-      { id: "AMC-STD", title: "Standard AMC", category: "Quarterly", status: "Active", owner: "Admin", updated: now, metric: "34 clients" },
-      { id: "AMC-PRM", title: "Premium AMC", category: "Bi-Monthly", status: "Recommended", owner: "Admin", updated: now, metric: "58 clients" },
-      { id: "AMC-ENT", title: "Enterprise Custom", category: "Custom", status: "Active", owner: "Sales", updated: "Jun 14, 2026", metric: "12 clients" },
+      { id: "AMC-STD", title: "Compliance Care", category: "Quarterly", status: "Active", owner: "Admin", updated: now, metric: "34 clients" },
+      { id: "AMC-PRM", title: "Risk Control AMC", category: "Bi-Monthly", status: "Recommended", owner: "Admin", updated: now, metric: "58 clients" },
+      { id: "AMC-ENT", title: "Enterprise Assurance", category: "Custom", status: "Active", owner: "Sales", updated: "Jun 14, 2026", metric: "12 clients" },
     ],
   },
   {
@@ -121,9 +121,9 @@ export const adminModules: AdminModule[] = [
     filters: ["All", "New", "In Progress", "Converted", "Closed"],
     columns: ["id", "title", "category", "status", "owner", "updated"],
     rows: [
-      { id: "INQ-9041", title: "The Grand Hotel", category: "AMC Inquiry", status: "New", owner: "Unassigned", updated: "Today", metric: "Delhi NCR" },
-      { id: "INQ-9038", title: "Cloud Bowl Kitchens", category: "Duct Cleaning", status: "In Progress", owner: "Meera", updated: "Today", metric: "Bangalore" },
-      { id: "INQ-9025", title: "Cafe North", category: "Hood Cleaning", status: "Converted", owner: "Rohit", updated: "Yesterday", metric: "Mumbai" },
+      { id: "INQ-9041", title: "Taj Business Hotel", category: "AMC Inquiry", status: "New", owner: "Unassigned", updated: "Today", metric: "Bangalore" },
+      { id: "INQ-9038", title: "Cloud Bowl Kitchens", category: "Duct Cleaning", status: "In Progress", owner: "Meera", updated: "Today", metric: "Whitefield" },
+      { id: "INQ-9025", title: "Copper Room Restaurant", category: "Hood Cleaning", status: "Converted", owner: "Rohit", updated: "Yesterday", metric: "Mumbai" },
     ],
   },
   {
@@ -136,9 +136,9 @@ export const adminModules: AdminModule[] = [
     filters: ["All", "Published", "Draft", "Scheduled", "Featured"],
     columns: ["id", "title", "category", "status", "owner", "updated", "metric"],
     rows: [
-      { id: "BLG-221", title: "Why Duct Cleaning is Critical", category: "Exhaust Systems", status: "Published", owner: "Content", updated: now, metric: "6 min" },
-      { id: "BLG-220", title: "NFPA 96 Guide", category: "Compliance", status: "Draft", owner: "Content", updated: "Jun 21, 2026", metric: "8 min" },
-      { id: "BLG-219", title: "Kitchen Fire Prevention", category: "Fire Safety", status: "Scheduled", owner: "Content", updated: "Jun 18, 2026", metric: "Jul 01" },
+      { id: "BLG-221", title: "How Often Should Kitchen Exhaust Ducts Be Cleaned?", category: "Exhaust Systems", status: "Published", owner: "Content", updated: now, metric: "6 min" },
+      { id: "BLG-220", title: "NFPA 96 Compliance Checklist for Restaurants", category: "Compliance", status: "Draft", owner: "Content", updated: "Jun 21, 2026", metric: "8 min" },
+      { id: "BLG-219", title: "Top Causes of Commercial Kitchen Fires", category: "Fire Safety", status: "Scheduled", owner: "Content", updated: "Jun 18, 2026", metric: "Jul 01" },
     ],
   },
   {
@@ -151,9 +151,9 @@ export const adminModules: AdminModule[] = [
     filters: ["All", "Open", "Closed", "Applications"],
     columns: ["id", "title", "category", "status", "owner", "updated", "metric"],
     rows: [
-      { id: "JOB-044", title: "Field Service Engineer", category: "Delhi NCR", status: "Open", owner: "HR", updated: now, metric: "18 applicants" },
-      { id: "JOB-043", title: "Sales Executive", category: "Mumbai", status: "Open", owner: "HR", updated: "Jun 20, 2026", metric: "22 applicants" },
-      { id: "JOB-039", title: "Project Coordinator", category: "Hyderabad", status: "Closed", owner: "HR", updated: "Jun 10, 2026", metric: "Hired" },
+      { id: "JOB-044", title: "Field Service Supervisor", category: "Delhi NCR", status: "Open", owner: "HR", updated: now, metric: "18 applicants" },
+      { id: "JOB-043", title: "AMC Sales Executive", category: "Mumbai", status: "Open", owner: "HR", updated: "Jun 20, 2026", metric: "22 applicants" },
+      { id: "JOB-039", title: "Operations Coordinator", category: "Hyderabad", status: "Closed", owner: "HR", updated: "Jun 10, 2026", metric: "Hired" },
     ],
   },
   {
@@ -166,9 +166,9 @@ export const adminModules: AdminModule[] = [
     filters: ["All", "Active", "Renewal Due", "Portal Enabled"],
     columns: ["id", "title", "category", "status", "owner", "updated", "metric"],
     rows: [
-      { id: "CL-3301", title: "Grand Meridian Hotel", category: "Premium AMC", status: "Active", owner: "Ops", updated: now, metric: "Portal enabled" },
-      { id: "CL-3298", title: "Cloud Feast Kitchens", category: "Enterprise", status: "Active", owner: "Ops", updated: "Jun 21, 2026", metric: "6 sites" },
-      { id: "CL-3284", title: "The Copper Room", category: "Standard AMC", status: "Renewal Due", owner: "Sales", updated: "Jun 11, 2026", metric: "10 days" },
+      { id: "CL-3301", title: "Taj Business Hotel - Bangalore", category: "Risk Control AMC", status: "Active", owner: "Ops", updated: now, metric: "Portal enabled" },
+      { id: "CL-3298", title: "Cloud Feast Kitchens", category: "Enterprise Assurance", status: "Active", owner: "Ops", updated: "Jun 21, 2026", metric: "6 sites" },
+      { id: "CL-3284", title: "The Copper Room", category: "Compliance Care", status: "Renewal Due", owner: "Sales", updated: "Jun 11, 2026", metric: "10 days" },
     ],
   },
   {
@@ -181,9 +181,9 @@ export const adminModules: AdminModule[] = [
     filters: ["All", "Scheduled", "Completed", "Report Pending"],
     columns: ["id", "title", "category", "status", "owner", "updated", "metric"],
     rows: [
-      { id: "INS-1048", title: "Grand Meridian Bi-Monthly AMC", category: "Exhaust", status: "Completed", owner: "Arvind", updated: now, metric: "94%" },
+      { id: "INS-1048", title: "Taj Business Hotel Bi-Monthly Exhaust AMC", category: "Exhaust", status: "Completed", owner: "Arvind", updated: now, metric: "94%" },
       { id: "INS-1047", title: "Cloud Feast Site 03", category: "Ventilation", status: "Report Pending", owner: "Neha", updated: "Today", metric: "91%" },
-      { id: "INS-1042", title: "Cafe North Cleaning", category: "Hood Filter", status: "Scheduled", owner: "Ravi", updated: "Jun 28, 2026", metric: "11:30 PM" },
+      { id: "INS-1042", title: "Copper Room Hood & Filter Cleaning", category: "Hood Filter", status: "Scheduled", owner: "Ravi", updated: "Jun 28, 2026", metric: "11:30 PM" },
     ],
   },
   {
@@ -198,7 +198,7 @@ export const adminModules: AdminModule[] = [
     rows: [
       { id: "TST-88", title: "Rohit Malhotra", category: "Restaurant", status: "Published", owner: "Admin", updated: now, metric: "5 stars" },
       { id: "TST-87", title: "Nisha Rao", category: "Cloud Kitchen", status: "Featured", owner: "Admin", updated: "Jun 18, 2026", metric: "5 stars" },
-      { id: "TST-84", title: "Amit Sharma", category: "Hotel", status: "Hidden", owner: "Admin", updated: "Jun 05, 2026", metric: "4 stars" },
+      { id: "TST-84", title: "Amit Sharma", category: "Hotel Engineering", status: "Hidden", owner: "Admin", updated: "Jun 05, 2026", metric: "4 stars" },
     ],
   },
   {
@@ -249,10 +249,10 @@ export const adminModules: AdminModule[] = [
 ];
 
 export const recentAdminActivity = [
-  { title: "New inquiry assigned", detail: "Cloud Bowl Kitchens assigned to Meera.", time: "12 min ago", icon: MessageSquare },
-  { title: "Inspection report published", detail: "Grand Meridian June AMC report sent to client portal.", time: "1 hour ago", icon: FileText },
-  { title: "Project featured", detail: "Five-Star Hotel Restoration moved to homepage portfolio.", time: "3 hours ago", icon: BriefcaseBusiness },
-  { title: "SEO rule updated", detail: "Duct cleaning Delhi metadata optimized.", time: "Yesterday", icon: Search },
+  { title: "New inquiry assigned", detail: "Cloud Bowl Kitchens assigned to Meera for duct cleaning scope.", time: "12 min ago", icon: MessageSquare },
+  { title: "Inspection report published", detail: "Taj Business Hotel June exhaust AMC report sent to client portal.", time: "1 hour ago", icon: FileText },
+  { title: "Project featured", detail: "Bangalore hotel exhaust restoration moved to homepage portfolio.", time: "3 hours ago", icon: BriefcaseBusiness },
+  { title: "SEO rule updated", detail: "Kitchen exhaust duct cleaning metadata optimized for Delhi NCR.", time: "Yesterday", icon: Search },
 ];
 
 export function getAdminModule(key: string) {

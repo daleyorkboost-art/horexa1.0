@@ -12,10 +12,10 @@ export default function ContactPage() {
     <SiteFrame activeHref="/contact">
       <PageHero
         activeLabel="Contact Us"
-        eyebrow="Get in Touch"
-        title="Let's Secure Your"
-        highlight="Kitchen Together"
-        description="Have a question about AMC plans, need an emergency inspection, or want to request a quote? Our team is ready to assist you."
+        eyebrow="Request Inspection"
+        title="Schedule a kitchen hygiene"
+        highlight="risk assessment"
+        description="Share your kitchen type, city, operating hours and audit timeline. Horexa will recommend the right cleaning scope, frequency and documentation plan."
         imageSrc={images.contact}
       />
 
@@ -26,7 +26,7 @@ export default function ContactPage() {
               align="left"
               eyebrow="Contact Details"
               title="Fast answers for high-pressure kitchen teams."
-              description="Reach Horexa by phone, email, inquiry form, or WhatsApp. Placeholder contact details match the PRD and screenshots."
+              description="Reach Horexa by phone, email, inquiry form or WhatsApp for site inspections, AMC renewals, urgent grease-load checks and report requests."
             />
             <div className="flex flex-col gap-5">
               {contactDetails.map((item) => (
@@ -58,7 +58,7 @@ export default function ContactPage() {
           <SectionHeading
             eyebrow="Service Areas"
             title="Serving Major Indian Hospitality Markets"
-            description="Local search-ready service area content from the PRD."
+            description="Regional teams support planned AMC work and inspection requests across India's largest hospitality and food-service clusters."
           />
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             {serviceAreas.map((area) => (
@@ -69,9 +69,9 @@ export default function ContactPage() {
           </div>
           <Card className="mt-12 flex min-h-72 items-center justify-center bg-secondary/40 p-8 text-center">
             <div>
-              <h3 className="text-h3 font-black">Map Placeholder</h3>
+              <h3 className="text-h3 font-black">Regional Service Coordination</h3>
               <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-                Embed Google Maps here when the production address and API key are available.
+                Horexa coordinates city-wise crews for night cleaning windows, AMC visits and urgent inspections across hotels, restaurants, hospitals and cafeterias.
               </p>
             </div>
           </Card>

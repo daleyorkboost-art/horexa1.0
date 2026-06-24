@@ -55,26 +55,26 @@ export const services: Service[] = [
     slug: "kitchen-exhaust-duct-cleaning",
     title: "Kitchen Exhaust Duct Cleaning",
     shortTitle: "Exhaust Duct Cleaning",
-    description: "Deep grease removal for ducts, hoods, fans, and high-risk cooking exhaust systems.",
+    description: "Remove grease deposits from hoods, ducts, risers and exhaust fans to reduce fire load and restore airflow.",
     longDescription:
-      "A full-scope cleaning service for commercial kitchen exhaust networks, built to reduce fire risk, restore airflow, and support NFPA 96-style compliance documentation.",
+      "Certified deep cleaning for commercial kitchen exhaust systems, designed to reduce grease-fire risk, improve extraction performance and maintain NFPA 96-aligned service records.",
     icon: Fan,
     image: images.services,
-    benefits: ["Fire risk reduction", "Better airflow", "Compliance-ready photos", "Extended equipment life"],
+    benefits: ["Lower grease-fire risk", "Improved smoke extraction", "NFPA 96-aligned records", "Less strain on exhaust fans"],
     includes: [
-      "Inspection and grease-level assessment",
-      "Hood, duct, filter, and fan cleaning",
-      "Access panel installation guidance",
-      "Post-cleaning inspection and photo report",
+      "Grease-depth inspection and risk grading",
+      "Hood, duct, riser, filter and fan degreasing",
+      "Access panel review for unreachable duct sections",
+      "Timestamped before/after photo report",
     ],
     faqs: [
       {
         question: "How often should kitchen exhaust ducts be cleaned?",
-        answer: "High-volume kitchens usually need quarterly or bi-monthly service, while smaller kitchens can often follow a half-yearly plan.",
+        answer: "High-volume hotel, restaurant and cloud kitchen lines usually need monthly, quarterly or bi-monthly cleaning. Moderate-volume sites may follow a six-month schedule after inspection.",
       },
       {
         question: "Do you provide before and after photos?",
-        answer: "Yes. Every cleaning can include timestamped before and after photos for internal audits and compliance records.",
+        answer: "Yes. AMC and project clients receive timestamped photos, service notes and corrective recommendations for audit files.",
       },
     ],
   },
@@ -82,13 +82,13 @@ export const services: Service[] = [
     slug: "hood-and-filter-cleaning",
     title: "Hood & Filter Cleaning",
     shortTitle: "Hood & Filter Cleaning",
-    description: "Degreasing for canopy hoods, baffle filters, grease trays, and visible exhaust surfaces.",
+    description: "Routine cleaning for canopy hoods, baffle filters, grease trays and visible extraction surfaces.",
     longDescription:
-      "Routine hood and filter cleaning keeps kitchen airflow stable, reduces smoke retention, and protects staff from unsafe grease buildup.",
+      "A scheduled service that keeps capture areas clean between major duct cleans, reduces daily fire load and helps kitchen teams maintain safer working conditions.",
     icon: Filter,
     image: images.services,
-    benefits: ["Cleaner cooking zones", "Improved capture efficiency", "Reduced odor", "Lower daily fire load"],
-    includes: ["Filter removal and soak cleaning", "Canopy degreasing", "Grease tray clearing", "Final surface wipe-down"],
+    benefits: ["Cleaner cooking lines", "Better capture efficiency", "Reduced smoke and odour hold", "Lower daily grease load"],
+    includes: ["Filter removal and soak cleaning", "Canopy and plenum degreasing", "Grease tray clearing", "Final surface wipe-down and handover"],
     faqs: [
       {
         question: "Can filters be cleaned on-site?",
@@ -104,13 +104,13 @@ export const services: Service[] = [
     slug: "ventilation-hygiene",
     title: "Ventilation Hygiene",
     shortTitle: "Ventilation Hygiene",
-    description: "Ventilation checks and cleaning support for airflow, odor control, and healthy kitchens.",
+    description: "Airflow checks and hygiene cleaning for ventilation assets serving kitchens and food preparation zones.",
     longDescription:
-      "A focused hygiene service for duct-linked ventilation assets, designed for hotels, restaurants, hospitals, and cafeterias.",
+      "Inspection-led ventilation hygiene for hotels, hospitals, cafeterias and cloud kitchens where airflow, odour control and staff comfort affect daily operations.",
     icon: Fan,
     image: images.hero,
-    benefits: ["Balanced airflow", "Better working comfort", "Odor reduction", "Equipment protection"],
-    includes: ["Airflow inspection", "Vent surface cleaning", "Fan and blower checks", "Maintenance recommendations"],
+    benefits: ["Balanced extraction", "Improved staff comfort", "Odour migration control", "Early equipment issue detection"],
+    includes: ["Visible airflow inspection", "Grille and vent surface cleaning", "Fan and blower condition checks", "Maintenance recommendations by priority"],
     faqs: [
       {
         question: "Is ventilation hygiene different from exhaust cleaning?",
@@ -126,13 +126,13 @@ export const services: Service[] = [
     slug: "water-tank-cleaning",
     title: "Water Tank Cleaning",
     shortTitle: "Water Tank Cleaning",
-    description: "Scheduled water tank cleaning for hospitality properties and commercial kitchens.",
+    description: "Scheduled cleaning and disinfection for overhead and underground water tanks in food-service facilities.",
     longDescription:
-      "A hygiene maintenance service for storage tanks that supports safer kitchen operations and cleaner facility water systems.",
+      "Water tank cleaning for hospitality and institutional kitchens where stored water quality affects cooking, dishwashing, staff areas and guest safety expectations.",
     icon: Droplets,
     image: images.contact,
-    benefits: ["Safer stored water", "Sediment removal", "Odor control", "Preventive hygiene"],
-    includes: ["Tank draining support", "Sludge and sediment removal", "Surface scrubbing", "Disinfection rinse"],
+    benefits: ["Cleaner stored water", "Sediment and sludge removal", "Odour and biofilm control", "Documented hygiene cycle"],
+    includes: ["Tank isolation and draining support", "Sludge and sediment removal", "Internal wall scrubbing", "Food-safe disinfection rinse"],
     faqs: [
       {
         question: "How frequently should water tanks be cleaned?",
@@ -148,13 +148,13 @@ export const services: Service[] = [
     slug: "access-panel-installation",
     title: "Access Panel Installation",
     shortTitle: "Access Panels",
-    description: "Access solutions that help technicians reach hidden duct sections safely and thoroughly.",
+    description: "Inspection and installation support for duct access points required for complete internal cleaning.",
     longDescription:
-      "Installation guidance and support for access points in ductwork so cleaning teams can reach grease-prone internal areas.",
+      "Access panel planning for ductwork with blind sections, helping engineering teams meet cleaning standards and avoid hidden grease accumulation.",
     icon: Wrench,
     image: images.projects,
-    benefits: ["Better duct reach", "More complete cleaning", "Inspection-ready systems", "Reduced blind spots"],
-    includes: ["Duct access assessment", "Panel placement recommendations", "Installation coordination", "Inspection checklist"],
+    benefits: ["Better internal duct reach", "More complete grease removal", "Inspection-ready ductwork", "Reduced hidden-risk zones"],
+    includes: ["Duct access assessment", "Panel placement recommendations", "Installation coordination", "Inspection checklist for future visits"],
     faqs: [
       {
         question: "Why do ducts need access panels?",
@@ -170,13 +170,13 @@ export const services: Service[] = [
     slug: "amc-contracts",
     title: "AMC Contracts",
     shortTitle: "AMC Contracts",
-    description: "Recurring hygiene maintenance with reports, schedules, priority support, and audit records.",
+    description: "Annual maintenance programs with planned visits, compliance records, priority support and service history.",
     longDescription:
-      "Annual maintenance contracts help operators avoid missed service windows while keeping compliance documentation ready.",
+      "AMC contracts help operators avoid missed cleaning cycles, maintain audit-ready documents and keep fire-risk reduction work on a predictable calendar.",
     icon: ClipboardCheck,
     image: images.amc,
-    benefits: ["Priority scheduling", "Digital reports", "Renewal reminders", "Dedicated support"],
-    includes: ["Service calendar", "Inspection report library", "Before and after photos", "Compliance documentation"],
+    benefits: ["Priority scheduling", "Digital report archive", "Renewal and audit reminders", "Dedicated service coordination"],
+    includes: ["Annual service calendar", "Inspection report library", "Before/after photo records", "Compliance documentation and visit summaries"],
     faqs: [
       {
         question: "Can we customize AMC frequency?",
@@ -192,13 +192,13 @@ export const services: Service[] = [
     slug: "fire-risk-reduction",
     title: "Fire Risk Reduction",
     shortTitle: "Fire Risk Reduction",
-    description: "Inspection-led recommendations that lower grease fire risk and support safer operations.",
+    description: "Grease-load inspection, cleaning recommendations and documentation for high-risk cooking environments.",
     longDescription:
-      "A safety-focused service layer combining grease-load checks, documentation, and practical maintenance recommendations.",
+      "A safety-focused assessment and maintenance layer for kitchens with tandoors, fryers, grills, woks and long operating hours.",
     icon: Flame,
     image: images.blog,
-    benefits: ["Lower ignition risk", "Cleaner ducts", "Audit readiness", "Safer kitchen teams"],
-    includes: ["Grease risk inspection", "Fire safety recommendations", "Photo evidence", "Follow-up maintenance plan"],
+    benefits: ["Lower ignition risk", "Prioritised corrective actions", "Audit-ready evidence", "Safer kitchen teams"],
+    includes: ["Grease-risk inspection", "Fire safety recommendations", "Photo evidence", "Follow-up maintenance plan"],
     faqs: [
       {
         question: "Does cleaning eliminate fire risk completely?",
@@ -213,11 +213,11 @@ export const services: Service[] = [
 ];
 
 export const values = [
-  { title: "Purpose Driven", description: "Every inspection is tied to safer kitchens and cleaner operations.", icon: Target },
-  { title: "Growth Focused", description: "Built to support single outlets and fast-growing multi-city brands.", icon: Sparkles },
-  { title: "Team Oriented", description: "Field teams, coordinators, and clients work from one clear service rhythm.", icon: Users },
-  { title: "Innovative", description: "Photo reporting and portal-ready records keep compliance easier to manage.", icon: Gauge },
-  { title: "Integrity First", description: "Transparent recommendations, clear schedules, and no hidden shortcuts.", icon: Handshake },
+  { title: "Safety First", description: "Every visit starts with access, isolation, PPE and fire-risk checks before cleaning begins.", icon: Target },
+  { title: "Audit Discipline", description: "Reports, photos and service logs are written for engineering teams, insurers and inspectors.", icon: Sparkles },
+  { title: "Field Ownership", description: "Supervisors close each site with a handover, findings summary and next-service recommendation.", icon: Users },
+  { title: "Measured Maintenance", description: "Grease load, airflow issues and overdue assets are tracked so service frequency stays realistic.", icon: Gauge },
+  { title: "Transparent Advice", description: "Clients get clear recommendations without unnecessary upselling or vague compliance claims.", icon: Handshake },
 ];
 
 export const processSteps = [
@@ -230,10 +230,10 @@ export const processSteps = [
 ];
 
 export const stats = [
-  { value: 90, suffix: "%", label: "Grease Fire Risk", description: "Kitchen fires are often linked to duct grease buildup." },
-  { value: 2, suffix: "x", label: "Efficiency Gain", description: "Cleaner exhaust systems support stronger airflow." },
-  { value: 100, suffix: "%", label: "Compliance Focus", description: "Reports are built for audit-ready maintenance records." },
-  { value: 7, suffix: "+", label: "Major Cities", description: "Service coverage across India's hospitality hubs." },
+  { value: 96, suffix: "%", label: "Report Completion", description: "AMC visits include photo-backed service documentation." },
+  { value: 24, suffix: "h", label: "Critical Response", description: "Priority inspection windows for active AMC clients." },
+  { value: 7, suffix: "+", label: "Service Markets", description: "Coverage across major Indian hospitality hubs." },
+  { value: 180, suffix: "+", label: "Maintained Assets", description: "Hoods, ducts, tanks and ventilation assets tracked in service calendars." },
 ];
 
 export const industries = [
@@ -261,61 +261,61 @@ export const testimonials = [
   {
     quote: "The AMC plan made fire audit preparation much easier for our hotel engineering team.",
     name: "Amit Sharma",
-    business: "Grand Meridian",
-    city: "Mumbai",
+    business: "Taj Business Hotel",
+    city: "Bangalore",
   },
 ];
 
 export const amcPlans = [
   {
-    name: "Standard AMC",
-    audience: "Small restaurants & cafes",
+    name: "Compliance Care",
+    audience: "Restaurants, cafes and cafeterias",
     frequency: "Quarterly Service",
-    description: "Essential compliance and safety maintenance for standard commercial kitchens.",
-    features: ["Quarterly inspection", "Duct and hood cleaning", "Before/after photo report", "Email support"],
+    description: "A structured quarterly maintenance plan for kitchens that need dependable hygiene records and predictable service dates.",
+    features: ["Quarterly grease-load inspection", "Hood, filter and duct cleaning", "Before/after photo report", "Audit reminder emails"],
     recommended: false,
   },
   {
-    name: "Premium AMC",
-    audience: "Hotels & busy cloud kitchens",
+    name: "Risk Control AMC",
+    audience: "Hotels, hospitals and cloud kitchens",
     frequency: "Bi-Monthly Service",
-    description: "Comprehensive coverage designed for high-volume cooking operations.",
-    features: ["Bi-monthly inspection", "Priority scheduling", "Portal-ready report archive", "WhatsApp support"],
+    description: "Higher-frequency maintenance for kitchens with fryers, grills, tandoors, long operating hours and internal audit pressure.",
+    features: ["Bi-monthly exhaust inspection", "Priority night scheduling", "Portal-ready report archive", "WhatsApp service desk"],
     recommended: true,
   },
   {
-    name: "Enterprise Custom",
+    name: "Enterprise Assurance",
     audience: "Chains & multi-location brands",
     frequency: "Custom Schedule",
-    description: "Tailored hygiene management across all your properties.",
-    features: ["Multi-city service calendar", "Dedicated coordinator", "Custom compliance dashboard", "Executive summaries"],
+    description: "A multi-site program with central reporting, local execution teams and consolidated compliance visibility.",
+    features: ["Multi-city service calendar", "Dedicated account coordinator", "Custom compliance dashboard", "Monthly executive summaries"],
     recommended: false,
   },
 ];
 
 export const projects = [
   {
-    title: "Five-Star Hotel Exhaust Restoration",
-    location: "Delhi NCR",
+    title: "Kitchen Exhaust Deep Cleaning - Taj Business Hotel",
+    location: "Bangalore CBD",
     duration: "2 Nights",
     kitchenType: "Hotel",
     greaseLevel: "Heavy" as const,
     category: "Duct Cleaning",
-    services: ["Exhaust Cleaning", "AMC"],
+    services: ["Exhaust Cleaning", "AMC Onboarding"],
     image: images.projects,
   },
   {
-    title: "Cloud Kitchen Deep Degreasing",
-    location: "Bangalore",
+    title: "Cloud Kitchen Ventilation Hygiene - Whitefield",
+    location: "Whitefield, Bangalore",
     duration: "1 Night",
     kitchenType: "Cloud Kitchen",
     greaseLevel: "Medium" as const,
     category: "Ventilation",
-    services: ["Deep Degreasing", "Ventilation"],
+    services: ["Ventilation Hygiene", "Filter Cleaning"],
     image: images.hero,
   },
   {
-    title: "Restaurant Hood & Filter Recovery",
+    title: "Restaurant Hood & Filter Recovery - Lower Parel",
     location: "Mumbai",
     duration: "8 Hours",
     kitchenType: "Restaurant",
@@ -325,83 +325,83 @@ export const projects = [
     image: images.blog,
   },
   {
-    title: "Hospital Kitchen AMC Rollout",
-    location: "Hyderabad",
+    title: "Hospital Kitchen Compliance Audit - Delhi NCR",
+    location: "Gurugram",
     duration: "3 Months",
     kitchenType: "Hospital",
     greaseLevel: "Light" as const,
     category: "AMC Projects",
-    services: ["AMC", "Compliance"],
+    services: ["AMC", "Compliance Audit"],
     image: images.amc,
   },
 ];
 
 export const blogPosts = [
   {
-    title: "Why Kitchen Exhaust Duct Cleaning is Critical for Safety and Compliance",
+    title: "How Often Should Kitchen Exhaust Ducts Be Cleaned?",
     category: "Exhaust Systems",
-    date: "May 15, 2024",
+    date: "June 18, 2026",
     readTime: "6 min read",
-    excerpt: "Grease buildup in exhaust ducts is one of the leading causes of commercial kitchen fires.",
+    excerpt: "A practical frequency guide for hotels, restaurants, cloud kitchens and cafeterias based on grease load and operating hours.",
     image: images.blog,
   },
   {
-    title: "Top 5 Causes of Kitchen Fires and How to Prevent Them",
-    category: "Fire Safety",
-    date: "May 10, 2024",
-    readTime: "5 min read",
-    excerpt: "A practical checklist for reducing risk before inspection season.",
+    title: "NFPA 96 Compliance Checklist for Restaurants",
+    category: "Compliance & Standards",
+    date: "June 12, 2026",
+    readTime: "8 min read",
+    excerpt: "What owners and facility teams should keep ready before exhaust inspections, fire audits and insurance reviews.",
     image: images.hero,
   },
   {
-    title: "NFPA 96 Standards: A Guide for Restaurant Owners",
-    category: "Compliance & Standards",
-    date: "May 3, 2024",
-    readTime: "8 min read",
-    excerpt: "What operators should know about exhaust hygiene, records, and frequency.",
+    title: "Top Causes of Commercial Kitchen Fires",
+    category: "Fire Safety",
+    date: "June 04, 2026",
+    readTime: "5 min read",
+    excerpt: "Grease buildup, poor access, damaged fans and missed service cycles are common preventable risks.",
     image: images.services,
   },
   {
-    title: "Benefits of AMC for Kitchen Exhaust Systems",
+    title: "Why AMC Contracts Reduce Operational Risks",
     category: "Maintenance Tips",
-    date: "April 24, 2024",
+    date: "May 29, 2026",
     readTime: "4 min read",
-    excerpt: "How scheduled maintenance prevents costly downtime and missed compliance windows.",
+    excerpt: "How planned maintenance helps avoid rushed audit preparation, unexpected shutdowns and undocumented service gaps.",
     image: images.amc,
   },
   {
-    title: "Before and After: Restoring a High-Volume Hotel Kitchen",
-    category: "Case Studies",
-    date: "April 18, 2024",
+    title: "Ventilation Hygiene Best Practices for Cloud Kitchens",
+    category: "Kitchen Hygiene",
+    date: "May 21, 2026",
     readTime: "7 min read",
-    excerpt: "A field report from a multi-night duct cleaning and documentation project.",
+    excerpt: "Practical maintenance checks for high-density cooking lines where odour and airflow issues escalate quickly.",
     image: images.projects,
   },
   {
-    title: "How Often Should Kitchen Exhaust Ducts Be Cleaned?",
-    category: "Kitchen Hygiene",
-    date: "April 11, 2024",
+    title: "What Should Be Included in a Kitchen Exhaust Cleaning Report?",
+    category: "Case Studies",
+    date: "May 14, 2026",
     readTime: "5 min read",
-    excerpt: "Cleaning frequency depends on kitchen volume, grease load, and audit requirements.",
+    excerpt: "The records operations teams should expect after a professional exhaust cleaning visit.",
     image: images.contact,
   },
 ];
 
 export const jobs = [
-  { title: "Field Service Engineer", location: "Delhi NCR", type: "Full Time", experience: "2-4 Years", status: "Open" },
-  { title: "Kitchen Duct Cleaning Technician", location: "Bangalore", type: "Full Time", experience: "1-3 Years", status: "Open" },
-  { title: "Sales Executive", location: "Mumbai", type: "Full Time", experience: "1-3 Years", status: "Open" },
-  { title: "Project Coordinator", location: "Hyderabad", type: "Full Time", experience: "2-4 Years", status: "Open" },
-  { title: "Business Development Manager", location: "Pan India", type: "Full Time", experience: "5+ Years", status: "Closed" },
+  { title: "Field Service Supervisor", location: "Delhi NCR", type: "Full Time", experience: "3-5 Years", status: "Open" },
+  { title: "Kitchen Exhaust Cleaning Technician", location: "Bangalore", type: "Full Time", experience: "1-3 Years", status: "Open" },
+  { title: "AMC Sales Executive", location: "Mumbai", type: "Full Time", experience: "2-4 Years", status: "Open" },
+  { title: "Operations Coordinator", location: "Hyderabad", type: "Full Time", experience: "2-4 Years", status: "Open" },
+  { title: "Regional Key Account Manager", location: "Pan India", type: "Full Time", experience: "5+ Years", status: "Closed" },
 ];
 
 export const careerBenefits = [
-  { title: "Competitive Salary", icon: Award },
-  { title: "Health & Accident Insurance", icon: HeartPulse },
-  { title: "Learning & Development", icon: GraduationCap },
-  { title: "Career Growth", icon: Sparkles },
-  { title: "Safe Work Environment", icon: ShieldCheck },
-  { title: "Recognition & Rewards", icon: Award },
+  { title: "Field Safety Training", icon: Award },
+  { title: "Health & Accident Cover", icon: HeartPulse },
+  { title: "Technical Certification Support", icon: GraduationCap },
+  { title: "Clear Growth Tracks", icon: Sparkles },
+  { title: "PPE & Site Safety Systems", icon: ShieldCheck },
+  { title: "Performance Recognition", icon: Award },
 ];
 
 export const contactDetails = [
@@ -411,7 +411,7 @@ export const contactDetails = [
 ];
 
 export const standards = [
-  { title: "NFPA 96 Aligned", description: "Cleaning and reporting practices designed around recognized exhaust safety standards.", icon: ShieldCheck },
-  { title: "Eco-Conscious Chemicals", description: "Degreasers selected for effectiveness, staff safety, and controlled handling.", icon: Leaf },
-  { title: "Detailed Reporting", description: "Photo-backed inspection records for audits, renewals, and internal reviews.", icon: FileCheck2 },
+  { title: "NFPA 96 Aligned", description: "Cleaning scopes and service records structured around recognized commercial exhaust safety standards.", icon: ShieldCheck },
+  { title: "Controlled Chemical Handling", description: "Professional degreasers selected for grease removal, staff safety and responsible wastewater control.", icon: Leaf },
+  { title: "Audit-Ready Reporting", description: "Photo-backed inspection records for fire audits, insurance reviews and internal engineering checks.", icon: FileCheck2 },
 ];

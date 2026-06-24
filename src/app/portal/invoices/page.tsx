@@ -9,8 +9,8 @@ export default function PortalInvoicesPage() {
   return (
     <PortalShell activeHref="/portal/invoices" title="Invoices & Payments" description="Invoice history, payment status, receipts, and AMC billing records.">
       <div className="grid gap-5 md:grid-cols-3">
-        <MetricCard label="FY 2026 Paid" value="₹1.44L" helper="All invoices settled" icon={CreditCard} tone="success" />
-        <MetricCard label="Outstanding" value="₹0" helper="No overdue invoices" icon={CreditCard} tone="primary" />
+        <MetricCard label="FY 2026 Paid" value="INR 1.44L" helper="All invoices settled" icon={CreditCard} tone="success" />
+        <MetricCard label="Outstanding" value="INR 0" helper="No overdue invoices" icon={CreditCard} tone="primary" />
         <MetricCard label="Receipts" value="4" helper="Available to download" icon={Download} tone="warning" />
       </div>
       <div className="mt-8">

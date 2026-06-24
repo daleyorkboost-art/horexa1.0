@@ -41,9 +41,9 @@ export default function HomePage() {
         }}
       />
       <HeroSection
-        eyebrow="Prevent. Clean. Protect."
-        title="Modern Hygiene Standards for Hospitality Spaces"
-        description="Kitchen exhaust hygiene, ventilation maintenance, fire-risk reduction and AMC services for hotels, restaurants and commercial kitchens."
+        eyebrow="Commercial Kitchen Hygiene"
+        title="Fire-safe exhaust systems. Audit-ready kitchens."
+        description="Horexa Solutions maintains kitchen exhaust, ventilation and hygiene assets for hotels, restaurants, cloud kitchens, hospitals and corporate cafeterias through certified cleaning and AMC contracts."
         imageSrc={images.hero}
         primaryAction={{ label: "Request Inspection", href: "/contact" }}
         secondaryAction={{ label: "Explore Services", href: "/services" }}
@@ -55,17 +55,17 @@ export default function HomePage() {
             <SectionHeading
               align="left"
               eyebrow="Horexa Solutions"
-              title="Clean air, safer kitchens, stronger compliance."
-              description="Horexa supports hospitality brands with specialist cleaning teams, photo-backed reporting, and maintenance schedules designed for fire safety and audit readiness."
+              title="Built for kitchens where downtime is not an option."
+              description="Our teams work around live hospitality operations with night service windows, protected work zones, supervisor handovers and documentation that engineering teams can use during audits."
             />
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="surface-card p-5">
                 <p className="text-3xl font-black text-primary">7+</p>
-                <p className="mt-2 text-sm text-muted-foreground">Major cities covered</p>
+                <p className="mt-2 text-sm text-muted-foreground">Hospitality markets covered</p>
               </div>
               <div className="surface-card p-5">
                 <p className="text-3xl font-black text-primary">24h</p>
-                <p className="mt-2 text-sm text-muted-foreground">Rapid inspection slots</p>
+                <p className="mt-2 text-sm text-muted-foreground">AMC priority response</p>
               </div>
               <div className="surface-card p-5">
                 <p className="text-3xl font-black text-primary">100%</p>
@@ -88,7 +88,11 @@ export default function HomePage() {
 
       <section className="section-band py-20">
         <div className="industrial-container relative">
-          <SectionHeading eyebrow="Our Services" title="What We Do" />
+          <SectionHeading
+            eyebrow="Core Services"
+            title="Hygiene services for high-risk food-service assets"
+            description="From grease-loaded ductwork to stored water systems, each scope is planned around fire safety, operational continuity and inspection records."
+          />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {services.slice(0, 6).map((service) => (
               <ServiceCard
@@ -108,14 +112,14 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Why Choose Us"
             title="Built for High-Risk, High-Volume Kitchens"
-            description="The visual language stays close to your references: heavy dark surfaces, precise typography, crisp cards, and orange glow interactions."
+            description="Horexa combines trained field teams, compliance-minded reporting and repeatable maintenance schedules for operators who cannot afford surprise shutdowns."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {[
-              { title: "Trained Professionals", description: "Field teams with safety-first workflows.", icon: Users },
-              { title: "NFPA Focused", description: "Reports designed for audit conversations.", icon: ShieldCheck },
-              { title: "Eco-Friendly Chemicals", description: "Effective degreasing with controlled handling.", icon: Leaf },
-              { title: "Fire Risk Reduction", description: "Grease-load reduction where it matters most.", icon: Flame },
+              { title: "Trained Field Teams", description: "Supervised crews with PPE, isolation and handover discipline.", icon: Users },
+              { title: "NFPA-Aligned Records", description: "Reports structured for audits, insurers and facility managers.", icon: ShieldCheck },
+              { title: "Controlled Degreasing", description: "Industrial cleaning chemistry with careful containment.", icon: Leaf },
+              { title: "Fire-Load Reduction", description: "Grease removal focused on hoods, ducts, risers and fans.", icon: Flame },
             ].map((item) => (
               <FeatureCard key={item.title} {...item} />
             ))}
@@ -129,7 +133,7 @@ export default function HomePage() {
             align="left"
             eyebrow="Before / After"
             title="Visible Results, Audit-Ready Proof"
-            description="Compare real-world grease buildup with cleaned exhaust surfaces using the same interactive before/after treatment required across project sections."
+            description="Compare grease-heavy extraction surfaces with cleaned handover conditions and documented visual proof."
           />
           <BeforeAfterSlider
             before={{ src: images.blog, alt: "Grease buildup before cleaning" }}
@@ -169,7 +173,11 @@ export default function HomePage() {
 
       <section className="py-20">
         <div className="industrial-container">
-          <SectionHeading eyebrow="Performance" title="Numbers That Matter" />
+          <SectionHeading
+            eyebrow="Operational Proof"
+            title="Metrics facility teams can act on"
+            description="The right maintenance partner should make risk, records and next steps easier to see."
+          />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat) => (
               <AnimatedCounter key={stat.label} {...stat} />
@@ -183,7 +191,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Testimonials"
             title="Trusted by Hospitality Operators"
-            description="Realistic sample testimonials for the static frontend while backend content is pending."
+            description="Operations leaders choose Horexa when they need clean handovers, reliable scheduling and documentation that survives scrutiny."
           />
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {testimonials.map((testimonial) => (

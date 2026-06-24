@@ -16,15 +16,20 @@ export default function BlogPage() {
       />
       <PageHero
         activeLabel="Blog"
-        title="Horexa"
-        highlight="Blog"
-        description="Insights, tips, and expert advice on kitchen hygiene, exhaust systems, safety compliance, and maintenance."
+        eyebrow="Knowledge Hub"
+        title="Kitchen safety and"
+        highlight="compliance notes"
+        description="Practical guidance for facility managers, chefs, owners and safety teams responsible for commercial kitchen hygiene."
         imageSrc={images.blog}
       />
 
       <section className="py-20">
         <div className="industrial-container">
-          <SectionHeading eyebrow="Knowledge Hub" title="Compliance Insights for Operators" />
+          <SectionHeading
+            eyebrow="Articles"
+            title="Maintenance guidance written for operators"
+            description="Clear checklists and field notes covering exhaust cleaning frequency, fire-risk causes, AMC planning and report readiness."
+          />
           <div className="mt-12">
             <BlogExplorer />
           </div>

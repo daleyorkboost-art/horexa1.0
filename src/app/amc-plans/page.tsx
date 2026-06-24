@@ -6,10 +6,11 @@ import { amcPlans, images } from "@/lib/site-data";
 
 const comparisonRows = [
   ["Inspection frequency", "Quarterly", "Bi-monthly", "Custom"],
-  ["Before/after photos", "Included", "Included", "Included"],
-  ["Priority scheduling", "Standard", "Priority", "Dedicated"],
+  ["Grease-load inspection", "Included", "Included", "Included"],
+  ["Before/after photo report", "Included", "Included", "Included"],
+  ["Priority scheduling", "Standard window", "Priority night window", "Dedicated calendar"],
   ["Digital report archive", "Email reports", "Portal-ready", "Executive dashboard"],
-  ["Support channel", "Email", "WhatsApp", "Dedicated coordinator"],
+  ["Audit reminders", "Email", "WhatsApp + email", "Monthly review call"],
 ];
 
 export default function AMCPlansPage() {
@@ -18,16 +19,20 @@ export default function AMCPlansPage() {
       <PageHero
         activeLabel="AMC Plans"
         eyebrow="Annual Maintenance Contracts"
-        title="Protect Your Kitchen"
-        highlight="Year-Round"
-        description="Never miss a compliance deadline or risk unmanaged grease buildup. Horexa AMC plans provide scheduled maintenance, reporting, and priority support."
+        title="Scheduled maintenance for"
+        highlight="audit-ready kitchens"
+        description="Horexa AMC contracts keep exhaust cleaning, ventilation hygiene, documentation and corrective recommendations on a predictable calendar."
         imageSrc={images.amc}
         centered
       />
 
       <section className="py-20">
         <div className="industrial-container">
-          <SectionHeading eyebrow="AMC Plans" title="Choose the Right Maintenance Rhythm" />
+          <SectionHeading
+            eyebrow="AMC Programs"
+            title="Maintenance plans based on kitchen volume and risk"
+            description="AMC is not a discount package. It is a managed service rhythm that helps operators stay ready for audits, renewals and internal safety checks."
+          />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {amcPlans.map((plan) => (
               <AMCPricingCard key={plan.name} {...plan} href="/contact" />
@@ -41,7 +46,7 @@ export default function AMCPlansPage() {
           <SectionHeading
             eyebrow="Comparison"
             title="Plan Feature Matrix"
-            description="A clear placeholder comparison table ready for confirmed pricing and CMS-driven plan details."
+            description="Compare the operational support included in each maintenance program before final scope and pricing are confirmed after inspection."
           />
           <Card className="mt-12 overflow-hidden p-0">
             <div className="overflow-x-auto">

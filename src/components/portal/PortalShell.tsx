@@ -77,7 +77,7 @@ export function PortalShell({ activeHref, title, description, children }: Portal
             </Button>
             <div className="hidden max-w-sm flex-1 items-center gap-2 rounded-lg border border-border bg-input px-3 md:flex">
               <Search className="text-muted-foreground" aria-hidden />
-              <Input className="border-0 bg-transparent focus-visible:ring-0" placeholder="Search reports, tickets, documents..." />
+              <Input className="border-0 bg-transparent focus-visible:ring-0" placeholder="Search reports, invoices, AMC records..." />
             </div>
             <div className="ml-auto flex items-center gap-3">
               <Button variant="outline" className="hidden sm:inline-flex">
@@ -88,7 +88,7 @@ export function PortalShell({ activeHref, title, description, children }: Portal
                 <Bell aria-hidden />
               </Button>
               <div className="flex size-11 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground">
-                GM
+                TB
               </div>
             </div>
           </div>

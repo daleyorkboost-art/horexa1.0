@@ -33,6 +33,7 @@ export function ContactForm() {
       email: String(formData.get("email") ?? ""),
       phone: String(formData.get("phone") ?? ""),
       city: String(formData.get("city") ?? ""),
+      service: String(formData.get("service") ?? ""),
       message: String(formData.get("message") ?? ""),
       sourcePage: typeof window !== "undefined" ? window.location.pathname : "website",
     };
@@ -61,18 +62,18 @@ export function ContactForm() {
     <form className="surface-card flex flex-col gap-5 p-6 md:p-8" onSubmit={handleSubmit}>
       <div>
         <h2 className="text-h3 font-black">Send an Inquiry</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Share a few details and the Horexa team will respond quickly.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Share your site type, city and service need. Horexa will respond with the next inspection step.</p>
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
         <Field label="Your Name *" htmlFor="name">
-          <Input id="name" name="name" placeholder="John Doe" required />
+          <Input id="name" name="name" placeholder="Rahul Mehra" required />
         </Field>
         <Field label="Business Name *" htmlFor="business">
-          <Input id="business" name="business" placeholder="The Grand Hotel" required />
+          <Input id="business" name="business" placeholder="Taj Business Hotel" required />
         </Field>
         <Field label="Email Address *" htmlFor="email">
-          <Input id="email" name="email" type="email" placeholder="john@example.com" required />
+          <Input id="email" name="email" type="email" placeholder="operations@hotel.com" required />
         </Field>
         <Field label="Phone Number *" htmlFor="phone">
           <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" required />
@@ -94,7 +95,7 @@ export function ContactForm() {
       </div>
 
       <Field label="Your Message *" htmlFor="message">
-        <Textarea id="message" name="message" placeholder="How can we help you?" required />
+        <Textarea id="message" name="message" placeholder="Share kitchen type, operating hours, audit date and any visible exhaust or odour issues." required />
       </Field>
 
       {message ? (

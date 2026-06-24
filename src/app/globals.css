@@ -36,9 +36,12 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at 18% 18%, hsl(var(--secondary) / 0.42), transparent 28%),
-      radial-gradient(circle at 86% 12%, hsl(var(--primary) / 0.09), transparent 30%),
+      linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px),
+      linear-gradient(180deg, rgb(255 255 255 / 0.018) 1px, transparent 1px),
+      radial-gradient(circle at 18% 18%, hsl(var(--secondary) / 0.38), transparent 26%),
+      radial-gradient(circle at 86% 12%, hsl(var(--primary) / 0.08), transparent 28%),
       linear-gradient(180deg, #0d0d0d 0%, #090b12 100%);
+    background-size: 72px 72px, 72px 72px, auto, auto, auto;
   }
 
   ::selection {
@@ -53,11 +56,11 @@
   }
 
   .orange-glow {
-    @apply transition duration-300 hover:border-primary/60 hover:shadow-glow;
+    @apply transition duration-500 ease-out hover:-translate-y-1 hover:border-primary/60 hover:shadow-glow;
   }
 
   .surface-card {
-    @apply rounded-xl border border-border/80 bg-card/90 shadow-industrial backdrop-blur;
+    @apply rounded-lg border border-border/80 bg-card/90 shadow-industrial backdrop-blur;
   }
 
   .section-band {
@@ -71,5 +74,40 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .surface-card,
+  .reveal-on-scroll {
+    animation: premium-reveal 0.72s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 24%;
+  }
+
+  .surface-card:nth-child(2n) {
+    animation-delay: 80ms;
+  }
+
+  .surface-card:nth-child(3n) {
+    animation-delay: 140ms;
+  }
+}
+
+@keyframes premium-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface-card,
+  .reveal-on-scroll {
+    animation: none;
   }
 }

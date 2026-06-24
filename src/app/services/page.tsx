@@ -10,16 +10,20 @@ export default function ServicesPage() {
     <SiteFrame activeHref="/services">
       <PageHero
         activeLabel="Services"
-        eyebrow="Our Services"
-        title="Complete Hygiene & Maintenance Solutions"
-        highlight="for Hospitality Spaces"
-        description="From kitchen exhaust cleaning to water tank maintenance, Horexa delivers end-to-end hygiene, safety, and compliance services."
+        eyebrow="Service Scope"
+        title="Commercial Kitchen Hygiene"
+        highlight="with Compliance Records"
+        description="Exhaust cleaning, ventilation hygiene, water tank maintenance and AMC support for kitchens that need safer operations and inspection-ready documentation."
         imageSrc={images.services}
       />
 
       <section className="py-20">
         <div className="industrial-container">
-          <SectionHeading eyebrow="Our Services" title="What We Do" />
+          <SectionHeading
+            eyebrow="Service Directory"
+            title="Choose the right scope for your risk profile"
+            description="Each service is built around a clear business outcome: reduce fire load, improve airflow, protect stored water or keep audit records current."
+          />
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             {filters.map((filter, index) => (
               <Badge key={filter} variant={index === 0 ? "default" : "secondary"} className="min-h-11 px-5">

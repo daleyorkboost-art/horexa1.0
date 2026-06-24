@@ -61,17 +61,17 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Team"
             title="Field Experts, Coordinators, and Compliance Support"
-            description="Placeholder team profiles for the static site, ready to be connected to CMS content later."
+            description="Horexa combines site supervisors, trained cleaning crews, operations coordinators and documentation support for predictable service quality."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {["Inspection Lead", "AMC Coordinator", "Compliance Specialist"].map((role, index) => (
+            {["Senior Inspection Lead", "AMC Operations Coordinator", "Compliance Documentation Specialist"].map((role, index) => (
               <Card key={role} className="overflow-hidden p-0">
                 <div className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url(${images.projects})` }} />
                 <div className="p-6">
-                  <Badge variant="secondary">Team {index + 1}</Badge>
+                  <Badge variant="secondary">{["Site Safety", "Service Calendar", "Audit Records"][index]}</Badge>
                   <h3 className="mt-4 text-2xl font-black">{role}</h3>
                   <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                    Experienced operator focused on safe execution, clean handovers, and clear reporting.
+                    Responsible for safe execution, clear client communication, clean handovers and reliable follow-up records.
                   </p>
                 </div>
               </Card>

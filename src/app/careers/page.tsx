@@ -14,15 +14,19 @@ export default function CareersPage() {
       <PageHero
         activeLabel="Careers"
         eyebrow="Join Horexa"
-        title="Build a Cleaner Tomorrow"
-        highlight="with Us"
-        description="Join field, sales, and coordination teams helping India's commercial kitchens become safer and more compliant."
+        title="Build a career in"
+        highlight="field service excellence"
+        description="Join the teams that inspect, clean, document and maintain commercial kitchen hygiene systems for serious hospitality operators."
         imageSrc={images.hero}
       />
 
       <section className="py-20">
         <div className="industrial-container">
-          <SectionHeading eyebrow="Open Positions" title="Find Your Next Role" />
+          <SectionHeading
+            eyebrow="Open Positions"
+            title="Roles for disciplined field and operations talent"
+            description="Horexa hires people who can work safely at night, communicate clearly with clients and take pride in clean handovers."
+          />
           <div className="mt-12 grid gap-5">
             {jobs.map((job) => (
               <Card key={job.title} className="flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
@@ -62,8 +66,8 @@ export default function CareersPage() {
             <SectionHeading
               align="left"
               eyebrow="Culture"
-              title="People. Passion. Performance."
-              description="The same values that show up in our service standards guide how our teams learn, grow, and deliver."
+              title="Practical training, safer sites and accountable teamwork."
+              description="Field work is demanding. Horexa supports crews with PPE, supervision, process checklists and growth paths into supervision, coordination and key accounts."
             />
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {values.slice(0, 4).map((value) => (
@@ -78,34 +82,37 @@ export default function CareersPage() {
 
           <Card className="p-6 md:p-8">
             <h2 className="text-h3 font-black">Don&apos;t See the Right Role?</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Send your resume for future field, sales, or operations openings.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Send your resume for future technician, supervisor, sales or operations openings.</p>
             <form className="mt-6 flex flex-col gap-5">
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="career-name">Name</Label>
-                  <Input id="career-name" placeholder="John Doe" />
+                  <Input id="career-name" placeholder="Aman Verma" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="career-email">Email</Label>
-                  <Input id="career-email" type="email" placeholder="john@example.com" />
+                  <Input id="career-email" type="email" placeholder="aman@example.com" />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="career-message">Message</Label>
-                <Textarea id="career-message" placeholder="Tell us what kind of role you are looking for." />
+                <Textarea id="career-message" placeholder="Share your city, field experience and preferred role." />
               </div>
               <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-primary/45 bg-primary/5 text-center text-sm text-muted-foreground transition hover:bg-primary/10">
                 <Upload className="text-primary" aria-hidden />
                 Upload Resume (PDF/DOC)
                 <input type="file" className="sr-only" accept=".pdf,.doc,.docx" />
               </label>
-              <Button type="submit">Submit Resume</Button>
+              <Button type="submit">Submit Profile</Button>
             </form>
           </Card>
         </div>
       </section>
 
-      <CTASection title="Ready to work with safer kitchens?" />
+      <CTASection
+        title="Want to grow with a serious field-services company?"
+        description="Horexa is building disciplined teams for commercial kitchen hygiene, compliance support and AMC operations across India."
+      />
     </SiteFrame>
   );
 }
