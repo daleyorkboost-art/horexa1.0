@@ -1,0 +1,111 @@
+import { Upload } from "lucide-react";
+import { CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { careerBenefits, images, jobs, values } from "@/lib/site-data";
+
+export default function CareersPage() {
+  return (
+    <SiteFrame activeHref="/careers">
+      <PageHero
+        activeLabel="Careers"
+        eyebrow="Join Horexa"
+        title="Build a Cleaner Tomorrow"
+        highlight="with Us"
+        description="Join field, sales, and coordination teams helping India's commercial kitchens become safer and more compliant."
+        imageSrc={images.hero}
+      />
+
+      <section className="py-20">
+        <div className="industrial-container">
+          <SectionHeading eyebrow="Open Positions" title="Find Your Next Role" />
+          <div className="mt-12 grid gap-5">
+            {jobs.map((job) => (
+              <Card key={job.title} className="flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant={job.status === "Open" ? "success" : "secondary"}>{job.status}</Badge>
+                    <Badge variant="secondary">{job.location}</Badge>
+                  </div>
+                  <h2 className="mt-4 text-2xl font-black">{job.title}</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {job.type} | {job.experience}
+                  </p>
+                </div>
+                <Button variant={job.status === "Open" ? "default" : "outline"} disabled={job.status !== "Open"}>
+                  Apply Now
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-band py-20">
+        <div className="industrial-container relative">
+          <SectionHeading eyebrow="Why Join Horexa" title="Benefits Built Around Field Excellence" />
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {careerBenefits.map((benefit) => (
+              <FeatureCard key={benefit.title} icon={benefit.icon} title={benefit.title} description="Designed to support safe, skilled, and rewarding work across our service teams." />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="industrial-container grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <SectionHeading
+              align="left"
+              eyebrow="Culture"
+              title="People. Passion. Performance."
+              description="The same values that show up in our service standards guide how our teams learn, grow, and deliver."
+            />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {values.slice(0, 4).map((value) => (
+                <Card key={value.title} className="p-5">
+                  <value.icon className="text-primary" aria-hidden />
+                  <h3 className="mt-4 font-black">{value.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{value.description}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <Card className="p-6 md:p-8">
+            <h2 className="text-h3 font-black">Don&apos;t See the Right Role?</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Send your resume for future field, sales, or operations openings.</p>
+            <form className="mt-6 flex flex-col gap-5">
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="career-name">Name</Label>
+                  <Input id="career-name" placeholder="John Doe" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="career-email">Email</Label>
+                  <Input id="career-email" type="email" placeholder="john@example.com" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="career-message">Message</Label>
+                <Textarea id="career-message" placeholder="Tell us what kind of role you are looking for." />
+              </div>
+              <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-primary/45 bg-primary/5 text-center text-sm text-muted-foreground transition hover:bg-primary/10">
+                <Upload className="text-primary" aria-hidden />
+                Upload Resume (PDF/DOC)
+                <input type="file" className="sr-only" accept=".pdf,.doc,.docx" />
+              </label>
+              <Button type="submit">Submit Resume</Button>
+            </form>
+          </Card>
+        </div>
+      </section>
+
+      <CTASection title="Ready to work with safer kitchens?" />
+    </SiteFrame>
+  );
+}

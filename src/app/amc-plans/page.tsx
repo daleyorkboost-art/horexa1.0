@@ -1,0 +1,100 @@
+import { CheckCircle2 } from "lucide-react";
+import { AMCPricingCard, ContactForm, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { amcPlans, images } from "@/lib/site-data";
+
+const comparisonRows = [
+  ["Inspection frequency", "Quarterly", "Bi-monthly", "Custom"],
+  ["Before/after photos", "Included", "Included", "Included"],
+  ["Priority scheduling", "Standard", "Priority", "Dedicated"],
+  ["Digital report archive", "Email reports", "Portal-ready", "Executive dashboard"],
+  ["Support channel", "Email", "WhatsApp", "Dedicated coordinator"],
+];
+
+export default function AMCPlansPage() {
+  return (
+    <SiteFrame activeHref="/amc-plans">
+      <PageHero
+        activeLabel="AMC Plans"
+        eyebrow="Annual Maintenance Contracts"
+        title="Protect Your Kitchen"
+        highlight="Year-Round"
+        description="Never miss a compliance deadline or risk unmanaged grease buildup. Horexa AMC plans provide scheduled maintenance, reporting, and priority support."
+        imageSrc={images.amc}
+        centered
+      />
+
+      <section className="py-20">
+        <div className="industrial-container">
+          <SectionHeading eyebrow="AMC Plans" title="Choose the Right Maintenance Rhythm" />
+          <div className="mt-14 grid gap-6 lg:grid-cols-3">
+            {amcPlans.map((plan) => (
+              <AMCPricingCard key={plan.name} {...plan} href="/contact" />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-band py-20">
+        <div className="industrial-container relative">
+          <SectionHeading
+            eyebrow="Comparison"
+            title="Plan Feature Matrix"
+            description="A clear placeholder comparison table ready for confirmed pricing and CMS-driven plan details."
+          />
+          <Card className="mt-12 overflow-hidden p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="bg-primary text-primary-foreground">
+                  <tr>
+                    <th className="px-6 py-4 font-black uppercase tracking-[0.1em]">Feature</th>
+                    <th className="px-6 py-4 font-black uppercase tracking-[0.1em]">Standard</th>
+                    <th className="px-6 py-4 font-black uppercase tracking-[0.1em]">Premium</th>
+                    <th className="px-6 py-4 font-black uppercase tracking-[0.1em]">Enterprise</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonRows.map((row) => (
+                    <tr key={row[0]} className="border-b border-border last:border-b-0">
+                      {row.map((cell, index) => (
+                        <td key={cell} className="px-6 py-5 text-muted-foreground">
+                          <span className={index === 0 ? "font-black text-foreground" : ""}>{cell}</span>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="industrial-container grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div>
+            <SectionHeading
+              align="left"
+              eyebrow="How AMC Works"
+              title="Set the calendar once. Stay audit-ready all year."
+              description="Horexa maintains the schedule, service record, photo evidence, and renewal reminders so your team can operate with fewer surprises."
+            />
+            <div className="mt-8 flex flex-col gap-4">
+              {["Site assessment", "Service calendar", "Scheduled cleaning", "Digital documentation", "Renewal review"].map(
+                (step, index) => (
+                  <Card key={step} className="flex items-center gap-4 p-5">
+                    <Badge>{index + 1}</Badge>
+                    <span className="font-black">{step}</span>
+                    <CheckCircle2 className="ml-auto text-primary" aria-hidden />
+                  </Card>
+                ),
+              )}
+            </div>
+          </div>
+          <ContactForm />
+        </div>
+      </section>
+    </SiteFrame>
+  );
+}
