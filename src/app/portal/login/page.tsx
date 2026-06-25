@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { Eye, Lock, Mail, MessageCircle, ShieldCheck, User, BarChart3, FileText, Headphones, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ShieldCheck, BarChart3, FileText, Headphones } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PortalLoginForm } from "@/components/portal/PortalLoginForm";
 import { images } from "@/lib/site-data";
 
 const loginFeatures = [
@@ -70,53 +68,7 @@ export default function PortalLoginPage() {
             <p className="mt-2 text-sm text-muted-foreground">Welcome back! Please login to your account.</p>
           </div>
 
-          <form className="mt-8 flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="email">Registered Email / Mobile Number</Label>
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input id="email" className="pl-12" placeholder="Enter email or mobile number" />
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input id="password" type="password" className="pl-12 pr-12" placeholder="Enter your password" />
-                <Eye className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden />
-              </div>
-              <Link href="/portal/login" className="self-end text-xs font-bold text-primary">
-                Forgot Password?
-              </Link>
-            </div>
-            <label className="flex items-center gap-3 text-sm text-muted-foreground">
-              <input type="checkbox" defaultChecked className="size-5 accent-primary" />
-              Remember Me
-            </label>
-            <Button asChild size="lg">
-              <Link href="/portal/dashboard">
-                Login
-                <ArrowRight data-icon="inline-end" />
-              </Link>
-            </Button>
-          </form>
-
-          <div className="my-6 flex items-center gap-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">
-            <div className="h-px flex-1 bg-border" />
-            OR
-            <div className="h-px flex-1 bg-border" />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <Button variant="outline" size="lg">
-              <Mail data-icon="inline-start" />
-              Login with Google
-            </Button>
-            <Button variant="outline" size="lg">
-              <MessageCircle data-icon="inline-start" />
-              Login with OTP
-            </Button>
-          </div>
+          <PortalLoginForm />
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don&apos;t have an account? <Link href="/contact" className="font-bold text-primary">Contact Support</Link>

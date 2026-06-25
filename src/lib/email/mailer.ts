@@ -1,5 +1,9 @@
 import nodemailer from "nodemailer";
 
+function cleanHeaderValue(value: string) {
+  return value.replace(/[\r\n]/g, " ").trim();
+}
+
 export function createTransporter() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT ?? 587);
@@ -11,7 +15,7 @@ export function createTransporter() {
   }
 
   return nodemailer.createTransport({
-    host,
+    host: cleanHeaderValue(host),
     port,
     secure: port === 465,
     auth: {
@@ -40,10 +44,12 @@ export async function sendEmail({
   }
 
   return transporter.sendMail({
-    from: process.env.SMTP_FROM ?? "Horexa Solutions <noreply@horexasolutions.com>",
-    to,
-    subject,
+    from: cleanHeaderValue(process.env.SMTP_FROM ?? "Horexa Solutions <noreply@horexasolutions.com>"),
+    to: cleanHeaderValue(to),
+    subject: cleanHeaderValue(subject),
     html,
     text,
+    disableFileAccess: true,
+    disableUrlAccess: true,
   });
 }

@@ -35,6 +35,7 @@ export function ContactForm() {
       city: String(formData.get("city") ?? ""),
       service: String(formData.get("service") ?? ""),
       message: String(formData.get("message") ?? ""),
+      website: String(formData.get("website") ?? ""),
       sourcePage: typeof window !== "undefined" ? window.location.pathname : "website",
     };
 
@@ -97,6 +98,7 @@ export function ContactForm() {
       <Field label="Your Message *" htmlFor="message">
         <Textarea id="message" name="message" placeholder="Share kitchen type, operating hours, audit date and any visible exhaust or odour issues." required />
       </Field>
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
       {message ? (
         <div className={status === "success" ? "rounded-lg border border-success/30 bg-success/10 p-4 text-sm text-success" : "rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning"}>

@@ -20,3 +20,4 @@ export { FAQAccordion } from "@/components/interactive/FAQAccordion";
 export { BeforeAfterSlider } from "@/components/interactive/BeforeAfterSlider";
 
 export { ContactForm } from "@/components/forms/ContactForm";
+export { CareerApplicationForm } from "@/components/forms/CareerApplicationForm";

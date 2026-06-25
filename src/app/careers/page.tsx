@@ -1,11 +1,7 @@
-import { Upload } from "lucide-react";
-import { CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { CareerApplicationForm, CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { careerBenefits, images, jobs, values } from "@/lib/site-data";
 
 export default function CareersPage() {
@@ -80,32 +76,7 @@ export default function CareersPage() {
             </div>
           </div>
 
-          <Card className="p-6 md:p-8">
-            <h2 className="text-h3 font-black">Don&apos;t See the Right Role?</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Send your resume for future technician, supervisor, sales or operations openings.</p>
-            <form className="mt-6 flex flex-col gap-5">
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="career-name">Name</Label>
-                  <Input id="career-name" placeholder="Aman Verma" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="career-email">Email</Label>
-                  <Input id="career-email" type="email" placeholder="aman@example.com" />
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="career-message">Message</Label>
-                <Textarea id="career-message" placeholder="Share your city, field experience and preferred role." />
-              </div>
-              <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-primary/45 bg-primary/5 text-center text-sm text-muted-foreground transition hover:bg-primary/10">
-                <Upload className="text-primary" aria-hidden />
-                Upload Resume (PDF/DOC)
-                <input type="file" className="sr-only" accept=".pdf,.doc,.docx" />
-              </label>
-              <Button type="submit">Submit Profile</Button>
-            </form>
-          </Card>
+          <CareerApplicationForm />
         </div>
       </section>
 

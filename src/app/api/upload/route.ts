@@ -1,6 +1,6 @@
 import { apiError, created } from "@/lib/api/response";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { uploadToCloudinary } from "@/lib/storage/cloudinary";
+import { uploadToCloudinary, validateUploadFile } from "@/lib/storage/cloudinary";
 
 export async function POST(request: Request) {
   const auth = await requireRoles([...roleGroups.admin, "CLIENT"]);
@@ -13,6 +13,11 @@ export async function POST(request: Request) {
 
     if (!(file instanceof File)) {
       return Response.json({ error: "A file field is required" }, { status: 422 });
+    }
+
+    const validationError = validateUploadFile(file);
+    if (validationError) {
+      return Response.json({ error: validationError }, { status: 422 });
     }
 
     const result = await uploadToCloudinary(file, folder);
