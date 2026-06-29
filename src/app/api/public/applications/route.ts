@@ -7,7 +7,7 @@ import { applicationSchema } from "@/lib/validators/admin";
 import { uploadToCloudinary, validateUploadFile } from "@/lib/storage/cloudinary";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "public-application"), 3, 10 * 60_000);
+  const limited = checkRateLimit(rateLimitKey(request, "public-application"), 3, 10 * 60_000, request);
   if (limited) return limited;
 
   try {

@@ -1,7 +1,12 @@
 import { PrismaClient, UserRole } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "bcryptjs";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({
+    connectionString: process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/horexa",
+  }),
+});
 
 const email = process.env.SEED_ADMIN_EMAIL?.toLowerCase().trim();
 const password = process.env.SEED_ADMIN_PASSWORD;

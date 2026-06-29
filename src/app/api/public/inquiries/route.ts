@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { inquirySchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "public-inquiry"), 5, 10 * 60_000);
+  const limited = checkRateLimit(rateLimitKey(request, "public-inquiry"), 5, 10 * 60_000, request);
   if (limited) return limited;
 
   try {

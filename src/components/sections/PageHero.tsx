@@ -39,7 +39,7 @@ export function PageHero({
         description={description}
         imageSrc={imageSrc}
         align={centered ? "center" : "left"}
-        className="min-h-[520px]"
+        className="min-h-[560px]"
         primaryAction={{ label: "Request Inspection", href: "/contact" }}
         secondaryAction={{ label: "Explore Services", href: "/services" }}
       />

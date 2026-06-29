@@ -55,6 +55,7 @@ export const inquirySchema = z.object({
   city: z.string().optional(),
   message: z.string().optional(),
   sourcePage: z.string().optional(),
+  serviceRequired: z.string().optional(),
   serviceId: z.string().optional(),
   amcPlanId: z.string().optional(),
 });
@@ -170,7 +171,7 @@ export const notificationSchema = z.object({
 export const categorySchema = z.object({
   name: z.string().min(2),
   slug: z.string().min(2),
-  type: z.enum(["SERVICE", "PROJECT", "BLOG", "CAREER", "DOCUMENT"]),
+  type: z.enum(["SERVICE", "PROJECT", "BLOG", "CAREER", "DOCUMENT", "FAQ"]),
   description: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ACTIVE", "INACTIVE", "ARCHIVED"]).optional(),
 });
@@ -197,6 +198,53 @@ export const userCreateSchema = z.object({
 });
 
 export const userUpdateSchema = userCreateSchema.partial();
+
+export const websiteSettingSchema = z.object({
+  key: z.string().min(2),
+  value: z.record(z.string(), z.unknown()),
+});
+
+export const seoMetadataSchema = z.object({
+  route: z.string().min(1),
+  title: z.string().min(5),
+  description: z.string().min(10),
+  keywords: z.array(z.string()).optional(),
+  canonical: z.string().url().optional(),
+  noIndex: z.boolean().optional(),
+  status: z.enum(["ACTIVE", "INACTIVE", "ARCHIVED"]).optional(),
+});
+
+export const uploadAssetSchema = z.object({
+  url: z.string().url(),
+  publicId: z.string().optional(),
+  resourceType: z.string().min(2),
+  format: z.string().optional(),
+  mimeType: z.string().min(2),
+  bytes: z.number().int().nonnegative(),
+  folder: z.string().min(1),
+  originalName: z.string().optional(),
+  ownerType: z
+    .enum(["SERVICE", "PROJECT", "BLOG", "CAREER", "CLIENT", "INSPECTION", "DOCUMENT", "USER", "GENERAL"])
+    .optional(),
+  ownerId: z.string().optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const faqSchema = z.object({
+  question: z.string().min(5),
+  answer: z.string().min(10),
+  category: z.string().optional(),
+  categoryId: z.string().optional(),
+  serviceId: z.string().optional(),
+  sortOrder: z.number().int().optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "ACTIVE", "INACTIVE", "ARCHIVED"]).optional(),
+});
+
+export const newsletterSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2).optional(),
+  sourcePage: z.string().optional(),
+});
 
 export const otpRequestSchema = z.object({
   identifier: z.string().min(5),

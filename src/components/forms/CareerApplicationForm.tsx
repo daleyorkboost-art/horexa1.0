@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,34 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export function CareerApplicationForm() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("submitting");
-    setMessage("");
-
-    const formData = new FormData(event.currentTarget);
-
-    try {
-      const response = await fetch("/api/public/applications", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(body?.error ?? "Unable to submit application");
-      }
-
-      event.currentTarget.reset();
-      setStatus("success");
-      setMessage("Application submitted. Horexa will review your profile and contact you if there is a fit.");
-    } catch (error) {
-      setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Unable to submit application. Please try again.");
-    }
   }
 
   return (
@@ -48,11 +21,11 @@ export function CareerApplicationForm() {
         <div className="grid gap-5 md:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="career-name">Name</Label>
-            <Input id="career-name" name="fullName" placeholder="Aman Verma" required />
+            <Input id="career-name" name="fullName" placeholder="Your name" required />
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="career-email">Email</Label>
-            <Input id="career-email" name="email" type="email" placeholder="aman@example.com" required />
+            <Input id="career-email" name="email" type="email" placeholder="name@example.com" required />
           </div>
         </div>
         <div className="flex flex-col gap-2">
@@ -70,15 +43,11 @@ export function CareerApplicationForm() {
         </label>
         <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
-        {message ? (
-          <div className={status === "success" ? "rounded-lg border border-success/30 bg-success/10 p-4 text-sm text-success" : "rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning"}>
-            {message}
-          </div>
-        ) : null}
+        <div className="rounded-lg border border-border bg-background/55 p-4 text-sm leading-6 text-muted-foreground">
+          Static form preview. Resume upload and application tracking will be connected in a later phase.
+        </div>
 
-        <Button type="submit" disabled={status === "submitting"}>
-          {status === "submitting" ? "Submitting..." : "Submit Profile"}
-        </Button>
+        <Button type="submit">Submit Profile</Button>
       </form>
     </Card>
   );

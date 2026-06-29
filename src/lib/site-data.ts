@@ -42,12 +42,15 @@ export type Service = {
 };
 
 export const images = {
-  hero: "/images/horexa-hero.webp",
-  services: "/images/horexa-service-hero.webp",
-  projects: "/images/horexa-projects.webp",
-  blog: "/images/horexa-blog.webp",
-  amc: "/images/horexa-amc.webp",
-  contact: "/images/horexa-contact.webp",
+  hero: "/images/main-hero-bg.webp",
+  services: "/images/service-exhaust-hero.webp",
+  projects: "/images/duct-before-after.webp",
+  blog: "/images/blog-hero.webp",
+  blogFeatured: "/images/blog-featured.webp",
+  amc: "/images/kitchen-bg.webp",
+  contact: "/images/hero-workers.webp",
+  team: "/images/culture-team.webp",
+  accessPanel: "/images/access-panel.webp",
 };
 
 export const services: Service[] = [
@@ -312,7 +315,7 @@ export const projects = [
     greaseLevel: "Medium" as const,
     category: "Ventilation",
     services: ["Ventilation Hygiene", "Filter Cleaning"],
-    image: images.hero,
+    image: "/images/main-hero-bg-alt.webp",
   },
   {
     title: "Restaurant Hood & Filter Recovery - Lower Parel",
@@ -322,7 +325,7 @@ export const projects = [
     greaseLevel: "Heavy" as const,
     category: "Hood & Filter",
     services: ["Hood Cleaning", "Filters"],
-    image: images.blog,
+    image: "/images/blog-art-2.webp",
   },
   {
     title: "Hospital Kitchen Compliance Audit - Delhi NCR",
@@ -332,7 +335,7 @@ export const projects = [
     greaseLevel: "Light" as const,
     category: "AMC Projects",
     services: ["AMC", "Compliance Audit"],
-    image: images.amc,
+    image: images.accessPanel,
   },
 ];
 
@@ -343,7 +346,7 @@ export const blogPosts = [
     date: "June 18, 2026",
     readTime: "6 min read",
     excerpt: "A practical frequency guide for hotels, restaurants, cloud kitchens and cafeterias based on grease load and operating hours.",
-    image: images.blog,
+    image: images.blogFeatured,
   },
   {
     title: "NFPA 96 Compliance Checklist for Restaurants",
@@ -351,7 +354,7 @@ export const blogPosts = [
     date: "June 12, 2026",
     readTime: "8 min read",
     excerpt: "What owners and facility teams should keep ready before exhaust inspections, fire audits and insurance reviews.",
-    image: images.hero,
+    image: "/images/blog-art-1.webp",
   },
   {
     title: "Top Causes of Commercial Kitchen Fires",
@@ -359,7 +362,7 @@ export const blogPosts = [
     date: "June 04, 2026",
     readTime: "5 min read",
     excerpt: "Grease buildup, poor access, damaged fans and missed service cycles are common preventable risks.",
-    image: images.services,
+    image: "/images/blog-art-3.webp",
   },
   {
     title: "Why AMC Contracts Reduce Operational Risks",
@@ -367,7 +370,7 @@ export const blogPosts = [
     date: "May 29, 2026",
     readTime: "4 min read",
     excerpt: "How planned maintenance helps avoid rushed audit preparation, unexpected shutdowns and undocumented service gaps.",
-    image: images.amc,
+    image: "/images/blog-art-4.webp",
   },
   {
     title: "Ventilation Hygiene Best Practices for Cloud Kitchens",
@@ -375,7 +378,7 @@ export const blogPosts = [
     date: "May 21, 2026",
     readTime: "7 min read",
     excerpt: "Practical maintenance checks for high-density cooking lines where odour and airflow issues escalate quickly.",
-    image: images.projects,
+    image: "/images/blog-art-5.webp",
   },
   {
     title: "What Should Be Included in a Kitchen Exhaust Cleaning Report?",
@@ -383,7 +386,7 @@ export const blogPosts = [
     date: "May 14, 2026",
     readTime: "5 min read",
     excerpt: "The records operations teams should expect after a professional exhaust cleaning visit.",
-    image: images.contact,
+    image: "/images/blog-art-6.webp",
   },
 ];
 

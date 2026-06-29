@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
 
 type Bucket = {
   count: number;
@@ -7,7 +8,7 @@ type Bucket = {
 
 const buckets = new Map<string, Bucket>();
 
-export function checkRateLimit(key: string, limit = 10, windowMs = 60_000) {
+export function checkRateLimit(key: string, limit = 10, windowMs = 60_000, request?: Request) {
   const now = Date.now();
   const bucket = buckets.get(key);
 
@@ -17,8 +18,19 @@ export function checkRateLimit(key: string, limit = 10, windowMs = 60_000) {
   }
 
   if (bucket.count >= limit) {
+    void prisma.rateLimitEvent
+      .create({
+        data: {
+          key,
+          scope: key.split(":")[0] ?? "unknown",
+          ipAddress: request?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request?.headers.get("x-real-ip") ?? undefined,
+          userAgent: request?.headers.get("user-agent") ?? undefined,
+        },
+      })
+      .catch(() => undefined);
+
     return NextResponse.json(
-      { error: "Too many requests. Please try again shortly." },
+      { error: { code: "RATE_LIMITED", message: "Too many requests. Please try again shortly." } },
       {
         status: 429,
         headers: {

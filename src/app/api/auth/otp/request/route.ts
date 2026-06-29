@@ -6,7 +6,7 @@ import { sendEmail } from "@/lib/email/mailer";
 import { otpRequestSchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "otp-request"), 5, 10 * 60_000);
+  const limited = checkRateLimit(rateLimitKey(request, "otp-request"), 5, 10 * 60_000, request);
   if (limited) return limited;
 
   try {

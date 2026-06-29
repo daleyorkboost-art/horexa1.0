@@ -88,7 +88,7 @@ export default function AboutPage() {
               <Card key={role} className="overflow-hidden p-0">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={images.projects}
+                    src={images.team}
                     alt={`${role} at Horexa Solutions`}
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"

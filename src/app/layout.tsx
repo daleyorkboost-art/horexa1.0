@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     siteName: "Horexa Solutions",
     title: "Horexa Solutions | Clean Air. Safe Kitchens.",
     description: "Commercial kitchen hygiene, exhaust duct cleaning, AMC plans, and compliance reporting across India.",
-    images: ["/images/horexa-hero.webp"],
+    images: ["/images/main-hero-bg.webp"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Horexa Solutions | Clean Air. Safe Kitchens.",
     description: "Commercial kitchen hygiene, exhaust duct cleaning, AMC plans, and compliance reporting across India.",
-    images: ["/images/horexa-hero.webp"],
+    images: ["/images/main-hero-bg.webp"],
   },
 };
 

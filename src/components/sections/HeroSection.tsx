@@ -45,11 +45,11 @@ export function HeroSection({
           fill
           priority
           sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover opacity-70"
+          className="absolute inset-0 -z-20 object-cover"
           aria-hidden
         />
       ) : null}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#0d0d0d_0%,rgba(13,13,13,0.92)_34%,rgba(13,13,13,0.52)_100%)]" />
+      <div className="hero-overlay absolute inset-0 -z-10" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background to-transparent" />
 
       <div
@@ -65,13 +65,11 @@ export function HeroSection({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className={cn("flex max-w-3xl flex-col gap-7", align === "center" && "items-center")}
         >
-          {eyebrow ? (
-            <span className="text-xs font-black uppercase tracking-[0.34em] text-primary">{eyebrow}</span>
-          ) : null}
-          <h1 className="text-balance text-hero font-black text-foreground">
+          {eyebrow ? <span className="section-kicker">{eyebrow}</span> : null}
+          <h1 className="max-w-4xl text-balance text-hero font-black text-foreground drop-shadow-[0_8px_28px_rgb(0_0_0/0.45)]">
             {title} {highlight ? <span className="text-primary">{highlight}</span> : null}
           </h1>
-          <p className="max-w-2xl text-base leading-8 text-muted-foreground md:text-lg">{description}</p>
+          <p className="max-w-2xl text-base leading-8 text-zinc-300 md:text-lg">{description}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
               <Link href={primaryAction.href}>

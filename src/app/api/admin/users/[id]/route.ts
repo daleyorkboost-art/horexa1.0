@@ -1,6 +1,7 @@
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { apiError, ok, parseJson } from "@/lib/api/response";
+import { writeAuditLog } from "@/lib/api/audit";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
 import { userUpdateSchema } from "@/lib/validators/admin";
@@ -29,7 +30,7 @@ export async function GET(_request: Request, context: RouteContext) {
   });
 
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: { code: "NOT_FOUND", message: "User not found" } }, { status: 404 });
   }
 
   return ok(user);
@@ -62,6 +63,14 @@ export async function PATCH(request: Request, context: RouteContext) {
       },
     });
 
+    await writeAuditLog({
+      actorId: auth.session.user?.id,
+      action: "UPDATE",
+      entity: "User",
+      entityId: id,
+      request,
+    });
+
     return ok(user);
   } catch (error) {
     return apiError(error);
@@ -74,5 +83,12 @@ export async function DELETE(_request: Request, context: RouteContext) {
 
   const { id } = await context.params;
   await prisma.user.delete({ where: { id } });
+  await writeAuditLog({
+    actorId: auth.session.user?.id,
+    action: "DELETE",
+    entity: "User",
+    entityId: id,
+    request: _request,
+  });
   return ok({ deleted: true });
 }

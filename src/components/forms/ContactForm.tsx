@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,45 +17,8 @@ const services = [
 ];
 
 export function ContactForm() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("submitting");
-    setMessage("");
-
-    const formData = new FormData(event.currentTarget);
-    const payload = {
-      fullName: String(formData.get("name") ?? ""),
-      businessName: String(formData.get("business") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      phone: String(formData.get("phone") ?? ""),
-      city: String(formData.get("city") ?? ""),
-      service: String(formData.get("service") ?? ""),
-      message: String(formData.get("message") ?? ""),
-      website: String(formData.get("website") ?? ""),
-      sourcePage: typeof window !== "undefined" ? window.location.pathname : "website",
-    };
-
-    try {
-      const response = await fetch("/api/public/inquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to submit inquiry");
-      }
-
-      event.currentTarget.reset();
-      setStatus("success");
-      setMessage("Inquiry sent successfully. Horexa will contact you shortly.");
-    } catch {
-      setStatus("error");
-      setMessage("Something went wrong. Please call or WhatsApp Horexa directly.");
-    }
   }
 
   return (
@@ -68,13 +30,13 @@ export function ContactForm() {
 
       <div className="grid gap-5 md:grid-cols-2">
         <Field label="Your Name *" htmlFor="name">
-          <Input id="name" name="name" placeholder="Rahul Mehra" required />
+          <Input id="name" name="name" placeholder="Your name" required />
         </Field>
         <Field label="Business Name *" htmlFor="business">
-          <Input id="business" name="business" placeholder="Taj Business Hotel" required />
+          <Input id="business" name="business" placeholder="Hotel, restaurant or kitchen name" required />
         </Field>
         <Field label="Email Address *" htmlFor="email">
-          <Input id="email" name="email" type="email" placeholder="operations@hotel.com" required />
+          <Input id="email" name="email" type="email" placeholder="name@company.com" required />
         </Field>
         <Field label="Phone Number *" htmlFor="phone">
           <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" required />
@@ -100,14 +62,12 @@ export function ContactForm() {
       </Field>
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
-      {message ? (
-        <div className={status === "success" ? "rounded-lg border border-success/30 bg-success/10 p-4 text-sm text-success" : "rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning"}>
-          {message}
-        </div>
-      ) : null}
+      <div className="rounded-lg border border-border bg-background/55 p-4 text-sm leading-6 text-muted-foreground">
+        Static form preview. Backend submission, CAPTCHA, and notifications will be connected in a later phase.
+      </div>
 
-      <Button type="submit" size="lg" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending..." : "Send Inquiry"}
+      <Button type="submit" size="lg">
+        Send Inquiry
         <Send data-icon="inline-end" />
       </Button>
     </form>

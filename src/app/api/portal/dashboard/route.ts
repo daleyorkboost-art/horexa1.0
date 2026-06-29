@@ -1,4 +1,5 @@
 import { ok } from "@/lib/api/response";
+import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
 
@@ -6,27 +7,8 @@ export async function GET() {
   const auth = await requireRoles(roleGroups.client);
   if (!auth.ok) return auth.response;
 
-  const userId = auth.session.user?.id;
-  const client = userId
-    ? await prisma.client.findFirst({
-        where: auth.role === "CLIENT" ? { userId } : undefined,
-        orderBy: { createdAt: "desc" },
-      })
-    : null;
-
-  if (!client && auth.role === "CLIENT") {
-    return ok({
-      metrics: {
-        totalInspections: 0,
-        complianceScore: 0,
-        nextInspection: null,
-        openTickets: 0,
-      },
-      compliance: [],
-      recentInspections: [],
-      activity: [],
-    });
-  }
+  const scope = await resolveClientScope(auth);
+  const client = "client" in scope ? scope.client : null;
 
   const clientWhere = client ? { clientId: client.id } : undefined;
   const [totalInspections, openTickets, recentInspections, compliance, documents] = await Promise.all([

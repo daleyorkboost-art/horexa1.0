@@ -17,8 +17,8 @@ export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
-      <div className="industrial-container flex h-[4.5rem] items-center justify-between gap-6 py-3">
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-[#07080b]/95 backdrop-blur-xl">
+      <div className="industrial-container flex h-[4.75rem] items-center justify-between gap-6 py-3">
         <Link href="/" className="group flex flex-col leading-none" aria-label="Horexa Solutions home">
           <span className="text-2xl font-black uppercase tracking-[0.12em] text-foreground">
             Hore<span className="text-primary">x</span>a
@@ -35,7 +35,7 @@ export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) 
               key={item.href}
               href={item.href}
               className={cn(
-                "relative py-2 text-xs font-black uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground",
+                "relative py-2 text-xs font-black uppercase tracking-[0.14em] text-zinc-400 transition hover:text-foreground",
                 activeHref === item.href && "text-primary",
               )}
             >

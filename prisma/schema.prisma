@@ -62,6 +62,7 @@ enum CategoryType {
   BLOG
   CAREER
   DOCUMENT
+  FAQ
 }
 
 enum InvoiceStatus {
@@ -70,6 +71,37 @@ enum InvoiceStatus {
   PAID
   OVERDUE
   CANCELLED
+}
+
+enum UploadOwnerType {
+  SERVICE
+  PROJECT
+  BLOG
+  CAREER
+  CLIENT
+  INSPECTION
+  DOCUMENT
+  USER
+  GENERAL
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  SKIPPED
+  FAILED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  UPLOAD
+  EMAIL
+  STATUS_CHANGE
+  EXPORT
 }
 
 model User {
@@ -92,7 +124,10 @@ model User {
   passwordResetTokens PasswordResetToken[]
   adminProfile  Admin?
   clientProfile Client?
+  clientMemberships ClientMember[]
   notifications Notification[]
+  auditLogs     AuditLog[]
+  uploads       UploadAsset[]
 
   @@index([role])
   @@index([isActive])
@@ -198,9 +233,29 @@ model Client {
   documents         Document[]
   tickets           Ticket[]
   invoices          Invoice[]
+  members           ClientMember[]
 
   @@index([status])
   @@index([city])
+}
+
+model ClientMember {
+  id          String       @id @default(cuid())
+  clientId    String
+  userId      String
+  title       String?
+  permissions String[]     @default([])
+  status      RecordStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, userId])
+  @@index([clientId])
+  @@index([userId])
+  @@index([status])
 }
 
 model Category {
@@ -217,6 +272,7 @@ model Category {
   projects  Project[]
   blogPosts BlogPost[]
   careers   Career[]
+  faqs      FAQ[]
 
   @@index([type])
   @@index([status])
@@ -242,9 +298,31 @@ model Service {
   categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   projects  Project[]
   inquiries Inquiry[]
+  faqs      FAQ[]
 
   @@index([status])
   @@index([category])
+  @@index([sortOrder])
+}
+
+model FAQ {
+  id        String       @id @default(cuid())
+  question  String
+  answer    String       @db.Text
+  category  String?
+  categoryId String?
+  serviceId String?
+  sortOrder Int          @default(0)
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  service     Service?  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([category])
+  @@index([status])
   @@index([sortOrder])
 }
 
@@ -306,6 +384,7 @@ model Inquiry {
   city        String?
   message     String?       @db.Text
   sourcePage  String?
+  serviceRequired String?
   status      InquiryStatus @default(NEW)
   assignedTo  String?
   serviceId   String?
@@ -385,6 +464,19 @@ model Application {
 
   career Career? @relation(fields: [careerId], references: [id], onDelete: SetNull)
   client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model NewsletterSubscription {
+  id        String       @id @default(cuid())
+  email     String       @unique
+  name      String?
+  sourcePage String?
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   @@index([status])
   @@index([createdAt])
@@ -475,6 +567,29 @@ model Document {
   @@index([status])
 }
 
+model UploadAsset {
+  id           String          @id @default(cuid())
+  url          String
+  publicId     String?
+  resourceType String
+  format       String?
+  mimeType     String
+  bytes        Int
+  folder       String
+  originalName String?
+  ownerType    UploadOwnerType @default(GENERAL)
+  ownerId      String?
+  uploadedById String?
+  metadata     Json?
+  createdAt    DateTime        @default(now())
+
+  uploadedBy User? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([ownerType, ownerId])
+  @@index([uploadedById])
+  @@index([createdAt])
+}
+
 model Invoice {
   id          String        @id @default(cuid())
   clientId    String?
@@ -530,4 +645,76 @@ model Notification {
   @@index([userId])
   @@index([type])
   @@index([readAt])
+}
+
+model EmailLog {
+  id          String      @id @default(cuid())
+  to          String
+  subject     String
+  status      EmailStatus @default(QUEUED)
+  provider    String?
+  messageId   String?
+  error       String?     @db.Text
+  metadata    Json?
+  createdAt   DateTime    @default(now())
+  sentAt      DateTime?
+
+  @@index([status])
+  @@index([to])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  actorId   String?
+  action    AuditAction
+  entity    String
+  entityId  String?
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime    @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model RateLimitEvent {
+  id        String   @id @default(cuid())
+  key       String
+  scope     String
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([key])
+  @@index([scope])
+  @@index([createdAt])
+}
+
+model WebsiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SeoMetadata {
+  id          String       @id @default(cuid())
+  route       String       @unique
+  title       String
+  description String
+  keywords    String[]     @default([])
+  canonical   String?
+  noIndex     Boolean      @default(false)
+  status      RecordStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([status])
 }

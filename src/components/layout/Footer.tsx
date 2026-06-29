@@ -4,7 +4,7 @@ import { serviceAreas, serviceLinks } from "@/lib/navigation";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/80 bg-background">
+    <footer className="border-t border-border/80 bg-[#07080b]">
       <div className="industrial-container grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex flex-col leading-none" aria-label="Horexa Solutions home">
