@@ -1,8 +1,19 @@
 import Link from "next/link";
+import Image from "next/image";
+import type { Metadata } from "next";
 import { ShieldCheck, BarChart3, FileText, Headphones } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { PortalLoginForm } from "@/components/portal/PortalLoginForm";
 import { images } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Client Portal Login",
+  description: "Secure Horexa AMC client portal login for inspection reports, compliance records, invoices, documents and support tickets.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const loginFeatures = [
   { title: "100% Compliance Focused", detail: "Stay aligned with fire safety and hygiene regulations.", icon: ShieldCheck },
@@ -14,10 +25,16 @@ const loginFeatures = [
 export default function PortalLoginPage() {
   return (
     <main className="grid min-h-screen bg-secondary text-foreground lg:grid-cols-[0.95fr_1.05fr]">
-      <section
-        className="relative hidden overflow-hidden border-r border-border bg-cover bg-center lg:block"
-        style={{ backgroundImage: `url(${images.contact})` }}
-      >
+      <section className="relative hidden overflow-hidden border-r border-border lg:block">
+        <Image
+          src={images.contact}
+          alt=""
+          fill
+          priority
+          sizes="50vw"
+          className="object-cover"
+          aria-hidden
+        />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,13,13,0.96),rgba(13,13,13,0.62))]" />
         <div className="relative z-10 flex min-h-screen flex-col justify-between p-10">
           <Link href="/" className="flex flex-col leading-none">

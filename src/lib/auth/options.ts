@@ -5,8 +5,15 @@ import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/db";
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const authSecret =
+  process.env.NEXTAUTH_SECRET ??
+  (process.env.NODE_ENV === "production" ? undefined : "horexa-local-development-secret-change-in-production");
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  secret: authSecret,
   session: {
     strategy: "jwt",
   },
@@ -99,11 +106,15 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      allowDangerousEmailAccountLinking: false,
-    }),
+    ...(googleClientId && googleClientSecret
+      ? [
+          GoogleProvider({
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+            allowDangerousEmailAccountLinking: false,
+          }),
+        ]
+      : []),
   ],
   callbacks: {
     async jwt({ token, user }) {

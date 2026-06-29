@@ -45,8 +45,8 @@ export function ProjectsFilter() {
         ))}
       </div>
       <BeforeAfterSlider
-        before={{ src: "/images/horexa-blog.jpeg", alt: "Greasy duct before cleaning" }}
-        after={{ src: "/images/horexa-projects.jpeg", alt: "Clean exhaust hood after cleaning" }}
+        before={{ src: "/images/horexa-blog.webp", alt: "Greasy duct before cleaning" }}
+        after={{ src: "/images/horexa-projects.webp", alt: "Clean exhaust hood after cleaning" }}
       />
     </div>
   );

@@ -2,12 +2,14 @@ import type { IconType } from "@/types/components";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-type MetricCardProps = {
+export type MetricTone = "primary" | "success" | "warning";
+
+export type MetricCardProps = {
   label: string;
   value: string;
   helper: string;
   icon: IconType;
-  tone?: string;
+  tone?: MetricTone;
 };
 
 export function MetricCard({ label, value, helper, icon: Icon, tone = "primary" }: MetricCardProps) {

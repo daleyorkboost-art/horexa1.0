@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
+import { CheckCircle2, Phone } from "lucide-react";
 import {
   AnimatedCounter,
   CTASection,
@@ -14,9 +14,6 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { industries, processSteps, services, stats } from "@/lib/site-data";
 
 type ServiceDetailPageProps = {
@@ -34,6 +31,24 @@ export async function generateMetadata({ params }: ServiceDetailPageProps) {
   return {
     title: service ? `${service.title} | Horexa Solutions` : "Service | Horexa Solutions",
     description: service?.description,
+    alternates: {
+      canonical: service ? `/services/${service.slug}` : "/services",
+    },
+    openGraph: service
+      ? {
+          title: `${service.title} | Horexa Solutions`,
+          description: service.description,
+          images: [service.image],
+        }
+      : undefined,
+    twitter: service
+      ? {
+          card: "summary_large_image",
+          title: `${service.title} | Horexa Solutions`,
+          description: service.description,
+          images: [service.image],
+        }
+      : undefined,
   };
 }
 
@@ -165,24 +180,9 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Request a quick callback for {service.shortTitle.toLowerCase()}.
               </p>
-              <form className="mt-6 flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="service-name">Name</Label>
-                  <Input id="service-name" placeholder="Rahul Mehra" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="service-phone">Phone</Label>
-                  <Input id="service-phone" placeholder="+91 98765 43210" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="service-message">Message</Label>
-                  <Textarea id="service-message" placeholder="Share your kitchen type and city" />
-                </div>
-                <Button type="submit">
-                  Request Inspection
-                  <ArrowRight data-icon="inline-end" />
-                </Button>
-              </form>
+              <Button asChild className="mt-6 w-full">
+                <Link href="/contact">Request Inspection</Link>
+              </Button>
               <div className="mt-6 rounded-lg border border-border bg-background/55 p-4">
                 <a href="tel:+919876543210" className="flex items-center gap-3 text-sm font-bold text-foreground">
                   <Phone className="text-primary" aria-hidden />

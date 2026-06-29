@@ -1,8 +1,28 @@
+import Image from "next/image";
+import type { Metadata } from "next";
 import { Award, ShieldCheck } from "lucide-react";
 import { AnimatedCounter, CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { images, standards, stats, values } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "About Horexa Solutions",
+  description:
+    "Learn how Horexa Solutions supports hotels, restaurants, cloud kitchens, hospitals and cafeterias with commercial kitchen hygiene, safety and compliance maintenance.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About Horexa Solutions",
+    description: "Commercial kitchen hygiene specialists built for safety, compliance and disciplined field execution.",
+    images: [images.hero],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Horexa Solutions",
+    description: "Commercial kitchen hygiene specialists built for safety, compliance and disciplined field execution.",
+    images: [images.hero],
+  },
+};
 
 export default function AboutPage() {
   return (
@@ -66,7 +86,15 @@ export default function AboutPage() {
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {["Senior Inspection Lead", "AMC Operations Coordinator", "Compliance Documentation Specialist"].map((role, index) => (
               <Card key={role} className="overflow-hidden p-0">
-                <div className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url(${images.projects})` }} />
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={images.projects}
+                    alt={`${role} at Horexa Solutions`}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-6">
                   <Badge variant="secondary">{["Site Safety", "Service Calendar", "Audit Records"][index]}</Badge>
                   <h3 className="mt-4 text-2xl font-black">{role}</h3>

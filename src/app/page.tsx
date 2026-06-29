@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   Flame,
@@ -23,6 +24,26 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { amcPlans, images, processSteps, services, standards, stats, testimonials } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Commercial Kitchen Exhaust Cleaning & AMC",
+  description:
+    "Horexa Solutions provides commercial kitchen exhaust cleaning, ventilation hygiene, fire-risk reduction and AMC contracts for hotels, restaurants, cloud kitchens, hospitals and cafeterias.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Horexa Solutions | Commercial Kitchen Hygiene & AMC",
+    description:
+      "Fire-safe exhaust systems, audit-ready documentation and planned maintenance for commercial kitchens across India.",
+    images: [images.hero],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Horexa Solutions | Commercial Kitchen Hygiene & AMC",
+    description:
+      "Fire-safe exhaust systems, audit-ready documentation and planned maintenance for commercial kitchens across India.",
+    images: [images.hero],
+  },
+};
 
 export default function HomePage() {
   return (

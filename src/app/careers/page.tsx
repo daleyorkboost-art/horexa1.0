@@ -1,8 +1,27 @@
+import type { Metadata } from "next";
 import { CareerApplicationForm, CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { careerBenefits, images, jobs, values } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Careers at Horexa Solutions",
+  description:
+    "Apply for field service, technician, AMC sales and operations roles with Horexa Solutions, a commercial kitchen hygiene and compliance services company.",
+  alternates: { canonical: "/careers" },
+  openGraph: {
+    title: "Careers at Horexa Solutions",
+    description: "Join disciplined field and operations teams serving India's commercial kitchens.",
+    images: [images.hero],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Careers at Horexa Solutions",
+    description: "Join disciplined field and operations teams serving India's commercial kitchens.",
+    images: [images.hero],
+  },
+};
 
 export default function CareersPage() {
   return (

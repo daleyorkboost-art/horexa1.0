@@ -1,11 +1,16 @@
-import { complianceBreakdown } from "@/lib/portal-data";
 import { Card } from "@/components/ui/card";
+
+type ComplianceBreakdown = {
+  label: string;
+  value: number;
+};
 
 type ComplianceDonutProps = {
   score?: number;
+  breakdown?: ComplianceBreakdown[];
 };
 
-export function ComplianceDonut({ score = 94 }: ComplianceDonutProps) {
+export function ComplianceDonut({ score = 0, breakdown = [] }: ComplianceDonutProps) {
   const radius = 58;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
@@ -30,7 +35,7 @@ export function ComplianceDonut({ score = 94 }: ComplianceDonutProps) {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-4xl font-black">{score}%</span>
-            <span className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Excellent</span>
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Pending</span>
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-4">
@@ -38,17 +43,23 @@ export function ComplianceDonut({ score = 94 }: ComplianceDonutProps) {
             <h2 className="text-2xl font-black">Compliance Overview</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">Weighted health of kitchen hygiene, exhaust systems, fire safety, and documentation.</p>
           </div>
-          {complianceBreakdown.map((item) => (
-            <div key={item.label}>
-              <div className="mb-2 flex justify-between text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                <span>{item.label}</span>
-                <span>{item.value}%</span>
+          {breakdown.length ? (
+            breakdown.map((item) => (
+              <div key={item.label}>
+                <div className="mb-2 flex justify-between text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  <span>{item.label}</span>
+                  <span>{item.value}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-border">
+                  <div className="h-full rounded-full bg-orange-sheen shadow-glow" style={{ width: `${item.value}%` }} />
+                </div>
               </div>
-              <div className="h-2 rounded-full bg-border">
-                <div className="h-full rounded-full bg-orange-sheen shadow-glow" style={{ width: `${item.value}%` }} />
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-sm leading-7 text-muted-foreground">
+              Compliance categories will appear here after client records are connected.
+            </p>
+          )}
         </div>
       </div>
     </Card>

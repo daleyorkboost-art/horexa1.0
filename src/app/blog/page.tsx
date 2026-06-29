@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { BlogExplorer } from "@/components/sections/BlogExplorer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageHero, SectionHeading, SiteFrame } from "@/components";
 import { images } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Kitchen Hygiene & Compliance Blog",
+  description:
+    "Read Horexa guidance on kitchen exhaust cleaning frequency, NFPA 96 checklists, commercial kitchen fire risks, AMC planning and ventilation hygiene.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Horexa Kitchen Hygiene & Compliance Blog",
+    description: "Practical maintenance guidance for commercial kitchen operators and facility teams.",
+    images: [images.blog],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Horexa Kitchen Hygiene & Compliance Blog",
+    description: "Practical maintenance guidance for commercial kitchen operators and facility teams.",
+    images: [images.blog],
+  },
+};
 
 export default function BlogPage() {
   return (

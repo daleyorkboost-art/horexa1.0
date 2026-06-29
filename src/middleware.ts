@@ -8,6 +8,10 @@ const securityHeaders = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
 };
 
+const authSecret =
+  process.env.NEXTAUTH_SECRET ??
+  (process.env.NODE_ENV === "production" ? undefined : "horexa-local-development-secret-change-in-production");
+
 export default withAuth(
   function middleware() {
     const response = NextResponse.next();
@@ -19,6 +23,7 @@ export default withAuth(
     return response;
   },
   {
+    secret: authSecret,
     pages: {
       signIn: "/portal/login",
     },

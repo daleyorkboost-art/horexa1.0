@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,9 +39,13 @@ export function HeroSection({
       )}
     >
       {imageSrc ? (
-        <div
-          className="absolute inset-0 -z-20 bg-cover bg-center opacity-70"
-          style={{ backgroundImage: `url(${imageSrc})` }}
+        <Image
+          src={imageSrc}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="absolute inset-0 -z-20 object-cover opacity-70"
           aria-hidden
         />
       ) : null}

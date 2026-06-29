@@ -1,12 +1,27 @@
 # Horexa Solutions Production Audit Report
 
-Date: 2026-06-25
+Date: 2026-06-26
 
 ## Executive Status
 
 The Horexa Solutions project is an existing Next.js + Prisma application that already implements the PRD's three major product areas: public marketing website, AMC client portal, and admin CMS/API surface.
 
-This pass focused on production readiness gaps that were concrete in the workspace: authentication wiring, public form hardening, upload validation, email safety, and build verification.
+This report reflects the latest production-readiness pass. The project has working public pages, protected admin/portal route shells, API foundations, Prisma schema, public form hardening, upload validation, optimized WebP assets, route-level SEO metadata, and Hostinger deployment documentation.
+
+## Latest Fixes Completed
+
+- Fixed protected route runtime failure when `NEXTAUTH_SECRET` or Google OAuth credentials are missing in local/staging environments.
+- Google OAuth provider is now enabled only when both `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are configured.
+- Added explicit NextAuth secret wiring for API auth and middleware.
+- Converted supplied JPEG assets to optimized WebP files and updated app references to WebP.
+- Replaced CSS background image rendering in hero, portal login, featured blog card, and about/team cards with responsive `next/image` usage.
+- Added route-specific metadata, canonical URLs, OpenGraph, and Twitter metadata for public pages and service detail pages.
+- Added noindex metadata for the portal login route.
+- Added Hostinger deployment guide with runtime, build, start, environment, database, OAuth, Cloudinary, and smoke-test instructions.
+- Added `hostinger:build`, `hostinger:start`, Node engine metadata, and `seed:admin` package scripts.
+- Added a secure `scripts/seed-admin.mjs` utility for the first production super-admin account.
+- Expanded `.env.example` with `NEXT_PUBLIC_SITE_URL`, optional `RECAPTCHA_SECRET_KEY`, and one-time admin seed variables.
+- Verified protected routes now redirect to `/portal/login` instead of failing with a NextAuth configuration error.
 
 ## Implemented Features
 
@@ -61,7 +76,7 @@ This pass focused on production readiness gaps that were concrete in the workspa
 
 Remaining security blockers:
 
-- `npm audit` reports a high-severity Nodemailer advisory through the current dependency graph with no available fix from npm audit. App-level mitigations were added, but dependency replacement or upstream patch tracking is required before final security sign-off.
+- `npm audit` reports a high-severity Nodemailer advisory through the current `next-auth` dependency graph with no available fix from npm audit. App-level email mitigations are present, but dependency replacement or upstream patch tracking is required before final security sign-off.
 - Production deployment must enforce HTTPS at the hosting/proxy layer.
 - `NEXTAUTH_SECRET`, Google OAuth credentials, SMTP credentials, Cloudinary credentials, database URL, and optional `RECAPTCHA_SECRET_KEY` must be configured in production.
 
@@ -117,6 +132,9 @@ Remaining performance work:
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `npm audit --audit-level=moderate`: failed due to Nodemailer advisories with no npm-provided fix path.
+- Local public route smoke tests passed for `/`, `/services`, `/projects`, `/amc-plans`, `/blog`, `/careers`, `/contact`, `/sitemap.xml`, and `/robots.txt`.
+- Local protected route smoke tests passed for `/admin` and `/portal/dashboard`: both return `307` redirect to `/portal/login` when unauthenticated.
+- Local `/portal/login` smoke test returned `200`.
 
 ## Deployment Readiness
 

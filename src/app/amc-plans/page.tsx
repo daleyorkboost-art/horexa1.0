@@ -1,8 +1,27 @@
+import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 import { AMCPricingCard, ContactForm, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { amcPlans, images } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Kitchen Exhaust AMC Contracts",
+  description:
+    "Horexa AMC plans keep kitchen exhaust cleaning, ventilation hygiene, compliance documentation and audit reminders on a scheduled maintenance calendar.",
+  alternates: { canonical: "/amc-plans" },
+  openGraph: {
+    title: "Horexa Kitchen Exhaust AMC Contracts",
+    description: "Scheduled maintenance programs for audit-ready commercial kitchens.",
+    images: [images.amc],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Horexa Kitchen Exhaust AMC Contracts",
+    description: "Scheduled maintenance programs for audit-ready commercial kitchens.",
+    images: [images.amc],
+  },
+};
 
 const comparisonRows = [
   ["Inspection frequency", "Quarterly", "Bi-monthly", "Custom"],

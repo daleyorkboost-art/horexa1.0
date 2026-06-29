@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MessageCircle } from "lucide-react";
 import { ContactForm, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { contactDetails, images } from "@/lib/site-data";
 import { serviceAreas } from "@/lib/navigation";
+
+export const metadata: Metadata = {
+  title: "Request a Kitchen Hygiene Inspection",
+  description:
+    "Contact Horexa Solutions for commercial kitchen exhaust inspection, AMC contracts, fire-risk checks, ventilation hygiene and report requests across major Indian cities.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Request a Horexa Kitchen Hygiene Inspection",
+    description: "Schedule an inspection for exhaust cleaning, AMC planning and audit-ready documentation.",
+    images: [images.contact],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Request a Horexa Kitchen Hygiene Inspection",
+    description: "Schedule an inspection for exhaust cleaning, AMC planning and audit-ready documentation.",
+    images: [images.contact],
+  },
+};
 
 export default function ContactPage() {
   return (

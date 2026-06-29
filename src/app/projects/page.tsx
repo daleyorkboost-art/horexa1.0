@@ -1,6 +1,25 @@
+import type { Metadata } from "next";
 import { CTASection, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { ProjectsFilter } from "@/components/sections/ProjectsFilter";
 import { images } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Commercial Kitchen Cleaning Projects",
+  description:
+    "Review Horexa case examples for kitchen exhaust deep cleaning, cloud kitchen ventilation hygiene, restaurant hood cleaning and hospital kitchen compliance audits.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Horexa Project Evidence",
+    description: "Before/after documentation and field examples from commercial kitchen hygiene projects.",
+    images: [images.projects],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Horexa Project Evidence",
+    description: "Before/after documentation and field examples from commercial kitchen hygiene projects.",
+    images: [images.projects],
+  },
+};
 
 export default function ProjectsPage() {
   return (

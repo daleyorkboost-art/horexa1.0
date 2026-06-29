@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Mail, Search } from "lucide-react";
 import { BlogCard } from "@/components";
 import { Badge } from "@/components/ui/badge";
@@ -66,7 +67,15 @@ export function BlogExplorer() {
           <section>
             <h2 className="text-2xl font-black">Featured Article</h2>
             <Card className="mt-5 grid overflow-hidden p-0 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="min-h-72 bg-cover bg-center" style={{ backgroundImage: `url(${featured.image})` }} />
+              <div className="relative min-h-72 overflow-hidden">
+                <Image
+                  src={featured.image}
+                  alt={featured.title}
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
               <div className="flex flex-col justify-center gap-5 p-8">
                 <div className="flex flex-wrap gap-2">
                   <Badge>Featured</Badge>
@@ -126,12 +135,8 @@ export function BlogExplorer() {
             <Mail className="text-primary" aria-hidden />
             <h2 className="mt-4 text-xl font-black">Newsletter</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Get kitchen hygiene tips and compliance updates.
+              Newsletter capture will be enabled after the subscription workflow and data model are finalized.
             </p>
-            <div className="mt-5 flex flex-col gap-3">
-              <Input placeholder="Email address" />
-              <Button>Subscribe</Button>
-            </div>
           </Card>
         </aside>
       </div>

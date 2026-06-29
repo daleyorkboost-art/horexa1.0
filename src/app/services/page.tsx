@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { Filter, Search } from "lucide-react";
 import { CTASection, PageHero, SectionHeading, ServiceCard, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { images, services } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Commercial Kitchen Hygiene Services",
+  description:
+    "Explore Horexa services for kitchen exhaust duct cleaning, hood and filter cleaning, ventilation hygiene, water tank cleaning, access panels, AMC contracts and fire-risk reduction.",
+  alternates: { canonical: "/services" },
+  openGraph: {
+    title: "Horexa Commercial Kitchen Hygiene Services",
+    description: "Specialist cleaning and compliance maintenance for high-risk food-service assets.",
+    images: [images.services],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Horexa Commercial Kitchen Hygiene Services",
+    description: "Specialist cleaning and compliance maintenance for high-risk food-service assets.",
+    images: [images.services],
+  },
+};
 
 const filters = ["All Services", "Exhaust Systems", "Maintenance", "Compliance", "Water Hygiene"];
 

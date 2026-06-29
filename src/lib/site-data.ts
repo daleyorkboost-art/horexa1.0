@@ -42,12 +42,12 @@ export type Service = {
 };
 
 export const images = {
-  hero: "/images/horexa-hero.jpeg",
-  services: "/images/horexa-service-hero.jpeg",
-  projects: "/images/horexa-projects.jpeg",
-  blog: "/images/horexa-blog.jpeg",
-  amc: "/images/horexa-amc.jpeg",
-  contact: "/images/horexa-contact.jpeg",
+  hero: "/images/horexa-hero.webp",
+  services: "/images/horexa-service-hero.webp",
+  projects: "/images/horexa-projects.webp",
+  blog: "/images/horexa-blog.webp",
+  amc: "/images/horexa-amc.webp",
+  contact: "/images/horexa-contact.webp",
 };
 
 export const services: Service[] = [
