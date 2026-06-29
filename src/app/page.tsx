@@ -20,10 +20,21 @@ import {
   SiteFrame,
   TestimonialCard,
   Timeline,
+  DatabaseEmptyState,
 } from "@/components";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
-import { amcPlans, images, processSteps, services, standards, stats, testimonials } from "@/lib/site-data";
+import {
+  dynamicPublicImages as images,
+  getPublicAmcPlans,
+  getPublicServices,
+  getPublicTestimonials,
+  processSteps,
+  standards,
+  stats,
+} from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Commercial Kitchen Exhaust Cleaning & AMC",
@@ -45,7 +56,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [services, amcPlans, testimonials] = await Promise.all([
+    getPublicServices(),
+    getPublicAmcPlans(),
+    getPublicTestimonials(),
+  ]);
+
   return (
     <SiteFrame activeHref="/">
       <JsonLd
@@ -115,15 +132,21 @@ export default function HomePage() {
             description="From grease-loaded ductwork to stored water systems, each scope is planned around fire safety, operational continuity and inspection records."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {services.slice(0, 6).map((service) => (
-              <ServiceCard
-                key={service.slug}
-                icon={service.icon}
-                title={service.title}
-                description={service.description}
-                href={`/services/${service.slug}`}
-              />
-            ))}
+            {services.length ? (
+              services.slice(0, 6).map((service) => (
+                <ServiceCard
+                  key={service.slug}
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.summary}
+                  href={`/services/${service.slug}`}
+                />
+              ))
+            ) : (
+              <div className="md:col-span-2 lg:col-span-3">
+                <DatabaseEmptyState title="No services published yet" description="Publish services in the database to populate this section." />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -172,9 +195,13 @@ export default function HomePage() {
             description="Scheduled maintenance, priority support, and complete digital documentation to keep kitchens audit-ready."
           />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {amcPlans.map((plan) => (
-              <AMCPricingCard key={plan.name} {...plan} href="/amc-plans" />
-            ))}
+            {amcPlans.length ? (
+              amcPlans.map((plan) => <AMCPricingCard key={plan.id} {...plan} href="/amc-plans" />)
+            ) : (
+              <div className="lg:col-span-3">
+                <DatabaseEmptyState title="No AMC plans published yet" description="Publish AMC plans in the database to populate this section." />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -215,9 +242,13 @@ export default function HomePage() {
             description="Operations leaders choose Horexa when they need clean handovers, reliable scheduling and documentation that survives scrutiny."
           />
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.name} {...testimonial} />
-            ))}
+            {testimonials.length ? (
+              testimonials.map((testimonial) => <TestimonialCard key={testimonial.id} {...testimonial} />)
+            ) : (
+              <div className="lg:col-span-3">
+                <DatabaseEmptyState title="No testimonials published yet" description="Publish featured testimonials in the database to populate this section." />
+              </div>
+            )}
           </div>
           <div className="mt-12 flex justify-center">
             <Button asChild variant="outline" size="lg">

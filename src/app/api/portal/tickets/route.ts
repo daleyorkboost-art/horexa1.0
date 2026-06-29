@@ -3,6 +3,8 @@ import { writeAuditLog } from "@/lib/api/audit";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
+import { sendEmail } from "@/lib/email/mailer";
+import { assertSameOrigin } from "@/lib/security/request";
 import { supportTicketSchema } from "@/lib/validators/admin";
 
 export async function GET() {
@@ -25,6 +27,7 @@ export async function POST(request: Request) {
   if (!auth.ok) return auth.response;
 
   try {
+    assertSameOrigin(request);
     const body = await parseJson(request);
     const data = supportTicketSchema.parse(body);
     const scope = await resolveClientScope(auth);
@@ -35,14 +38,33 @@ export async function POST(request: Request) {
         clientId: "clientId" in scope ? scope.clientId : data.clientId,
       },
     });
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL ?? process.env.SMTP_USER;
 
-    await writeAuditLog({
-      actorId: auth.session.user?.id,
-      action: "CREATE",
-      entity: "Ticket",
-      entityId: ticket.id,
-      request,
-    });
+    await Promise.allSettled([
+      prisma.notification.create({
+        data: {
+          userId: auth.session.user?.id,
+          type: "TICKET",
+          title: "Support ticket created",
+          body: `${ticket.subject} has been submitted to the Horexa support team.`,
+          metadata: { ticketId: ticket.id },
+        },
+      }),
+      adminEmail
+        ? sendEmail({
+            to: adminEmail,
+            subject: "New Horexa client portal ticket",
+            html: `<p>A client portal ticket was created.</p><p><strong>${ticket.subject}</strong></p><p>${ticket.message}</p><p>Priority: ${ticket.priority}</p>`,
+          })
+        : Promise.resolve({ skipped: true }),
+      writeAuditLog({
+        actorId: auth.session.user?.id,
+        action: "CREATE",
+        entity: "Ticket",
+        entityId: ticket.id,
+        request,
+      }),
+    ]);
 
     return created(ticket);
   } catch (error) {

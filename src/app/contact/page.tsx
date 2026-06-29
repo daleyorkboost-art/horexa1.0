@@ -1,12 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { MessageCircle } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { ContactForm, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { contactDetails, images } from "@/lib/site-data";
-import { serviceAreas } from "@/lib/navigation";
+import {
+  dynamicPublicImages as images,
+  getPublicAmcPlans,
+  getPublicContactSettings,
+  getPublicServices,
+} from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Request a Kitchen Hygiene Inspection",
@@ -26,7 +32,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [services, amcPlans, contact] = await Promise.all([
+    getPublicServices(),
+    getPublicAmcPlans(),
+    getPublicContactSettings(),
+  ]);
+  const contactDetails = [
+    { label: "Call Us", value: contact.phone, helper: contact.hours, icon: Phone },
+    { label: "Email Us", value: contact.email, helper: "For general inquiries", icon: Mail },
+    { label: "Headquarters", value: contact.headquarters, helper: "Serving major Indian cities", icon: MapPin },
+  ].filter((item) => item.value);
+
   return (
     <SiteFrame activeHref="/contact">
       <PageHero
@@ -68,7 +85,7 @@ export default function ContactPage() {
               </Link>
             </Button>
           </div>
-          <ContactForm />
+          <ContactForm services={services} amcPlans={amcPlans} sourcePage="/contact" defaultService="Inspection Request" mode="inspection" />
         </div>
       </section>
 
@@ -80,7 +97,7 @@ export default function ContactPage() {
             description="Regional teams support planned AMC work and inspection requests across India's largest hospitality and food-service clusters."
           />
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {serviceAreas.map((area) => (
+            {contact.serviceAreas.map((area) => (
               <Badge key={area} className="min-h-11 px-5">
                 {area}
               </Badge>

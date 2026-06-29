@@ -3,6 +3,7 @@ import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { isLikelyBot, requestIp, verifyCaptchaToken } from "@/lib/api/spam-protection";
 import { sendAdminLeadNotification, sendInquiryAcknowledgement } from "@/lib/email/workflows";
 import { prisma } from "@/lib/db";
+import { assertSameOrigin } from "@/lib/security/request";
 import { inquirySchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
@@ -10,6 +11,7 @@ export async function POST(request: Request) {
   if (limited) return limited;
 
   try {
+    assertSameOrigin(request);
     const body = await parseJson(request);
     if (isLikelyBot(body.website)) {
       return created({ accepted: true });
@@ -20,13 +22,10 @@ export async function POST(request: Request) {
     }
 
     const parsed = inquirySchema.parse(body);
-    const service = typeof body.service === "string" ? body.service.trim() : "";
-    const data = service
-      ? {
-          ...parsed,
-          message: [`Service required: ${service}`, parsed.message].filter(Boolean).join("\n\n"),
-        }
-      : parsed;
+    const data = {
+      ...parsed,
+      serviceRequired: parsed.serviceRequired ?? (typeof body.service === "string" ? body.service.trim() : undefined),
+    };
     const inquiry = await prisma.inquiry.create({ data });
 
     await Promise.allSettled([
@@ -35,6 +34,7 @@ export async function POST(request: Request) {
         leadName: data.fullName,
         businessName: data.businessName,
         city: data.city,
+        service: data.serviceRequired,
       }),
     ]);
 

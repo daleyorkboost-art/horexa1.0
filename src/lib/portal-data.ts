@@ -6,6 +6,7 @@ import {
   FileText,
   Home,
   LifeBuoy,
+  Bell,
   Settings,
   ShieldCheck,
   Users,
@@ -21,5 +22,6 @@ export const portalNav = [
   { label: "Team Access", href: "/portal/team", icon: Users },
   { label: "Invoices", href: "/portal/invoices", icon: CreditCard },
   { label: "Tickets", href: "/portal/tickets", icon: LifeBuoy },
+  { label: "Notifications", href: "/portal/notifications", icon: Bell },
   { label: "Settings", href: "/portal/settings", icon: Settings },
 ];

@@ -5,6 +5,7 @@ import { ApiError, apiError, created, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { buildOrderBy, buildSearchWhere, paginationMeta, parseListQuery } from "@/lib/api/query";
 import { requireRoles } from "@/lib/auth/rbac";
+import { assertSameOrigin } from "@/lib/security/request";
 
 type CrudDelegate = {
   findMany: (args?: any) => Promise<unknown>;
@@ -92,6 +93,7 @@ export function createCollectionHandlers(
     if (!auth.ok) return auth.response;
 
     try {
+      assertSameOrigin(request);
       const body = await parseJson(request);
       const data = schema.parse(body);
       const item = await delegate.create({ data });
@@ -136,6 +138,7 @@ export function createItemHandlers(
     if (!auth.ok) return auth.response;
 
     try {
+      assertSameOrigin(request);
       const { id } = await context.params;
       const body = await parseJson(request);
       const data = (schema as any).partial().parse(body);
@@ -158,6 +161,7 @@ export function createItemHandlers(
     if (!auth.ok) return auth.response;
 
     try {
+      assertSameOrigin(_request);
       const { id } = await context.params;
       const existing = await delegate.findUnique({ where: { id } });
       if (!existing) throw new ApiError("Record not found", 404, "NOT_FOUND");

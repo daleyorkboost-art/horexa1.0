@@ -3,15 +3,25 @@
 import { useMemo, useState } from "react";
 import { BeforeAfterSlider, ProjectCard } from "@/components";
 import { Button } from "@/components/ui/button";
-import { projects } from "@/lib/site-data";
 
 const categories = ["All", "Duct Cleaning", "Hood & Filter", "Ventilation", "Water Tank", "AMC Projects"];
 
-export function ProjectsFilter() {
+type Project = {
+  title: string;
+  location: string;
+  duration: string;
+  kitchenType: string;
+  greaseLevel: "Light" | "Medium" | "Heavy";
+  category: string;
+  services: string[];
+  image: string;
+};
+
+export function ProjectsFilter({ projects }: { projects: Project[] }) {
   const [category, setCategory] = useState("All");
   const filteredProjects = useMemo(
     () => (category === "All" ? projects : projects.filter((project) => project.category === category)),
-    [category],
+    [category, projects],
   );
 
   return (
@@ -44,10 +54,12 @@ export function ProjectsFilter() {
           />
         ))}
       </div>
-      <BeforeAfterSlider
-        before={{ src: "/images/blog-featured.webp", alt: "Greasy duct before cleaning" }}
-        after={{ src: "/images/duct-before-after.webp", alt: "Clean exhaust hood after cleaning" }}
-      />
+      {projects[0] ? (
+        <BeforeAfterSlider
+          before={{ src: projects[0].image, alt: `${projects[0].title} project image` }}
+          after={{ src: projects[0].image, alt: `${projects[0].title} documented handover` }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -1,16 +1,19 @@
 import { apiError, created, parseJson } from "@/lib/api/response";
 import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { isLikelyBot, requestIp, verifyCaptchaToken } from "@/lib/api/spam-protection";
+import { sendCareerApplicationNotification } from "@/lib/email/workflows";
 import { sendEmail } from "@/lib/email/mailer";
 import { prisma } from "@/lib/db";
 import { applicationSchema } from "@/lib/validators/admin";
-import { uploadToCloudinary, validateUploadFile } from "@/lib/storage/cloudinary";
+import { assertSameOrigin } from "@/lib/security/request";
+import { uploadToCloudinary, validateUploadFileSecurity } from "@/lib/storage/cloudinary";
 
 export async function POST(request: Request) {
   const limited = checkRateLimit(rateLimitKey(request, "public-application"), 3, 10 * 60_000, request);
   if (limited) return limited;
 
   try {
+    assertSameOrigin(request);
     const contentType = request.headers.get("content-type") ?? "";
     const body = contentType.includes("multipart/form-data")
       ? await parseApplicationForm(request)
@@ -25,13 +28,22 @@ export async function POST(request: Request) {
     }
 
     const data = applicationSchema.parse(body);
+    const career = data.careerId ? await prisma.career.findUnique({ where: { id: data.careerId } }) : null;
     const application = await prisma.application.create({ data });
 
-    await sendEmail({
-      to: data.email,
-      subject: "Horexa received your application",
-      html: `<p>Hello ${data.fullName},</p><p>Thank you for applying to Horexa Solutions. Our hiring team will review your application.</p>`,
-    });
+    await Promise.allSettled([
+      sendEmail({
+        to: data.email,
+        subject: "Horexa received your application",
+        html: `<p>Hello ${data.fullName},</p><p>Thank you for applying to Horexa Solutions. Our hiring team will review your application.</p>`,
+      }),
+      sendCareerApplicationNotification({
+        applicantName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        careerTitle: career?.title,
+      }),
+    ]);
 
     return created(application);
   } catch (error) {
@@ -45,7 +57,7 @@ async function parseApplicationForm(request: Request) {
   let resumeUrl = String(formData.get("resumeUrl") ?? "");
 
   if (file instanceof File && file.size > 0) {
-    const validationError = validateUploadFile(
+    const validationError = await validateUploadFileSecurity(
       file,
       new Set([
         "application/pdf",

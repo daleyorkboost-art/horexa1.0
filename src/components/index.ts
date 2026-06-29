@@ -21,3 +21,5 @@ export { BeforeAfterSlider } from "@/components/interactive/BeforeAfterSlider";
 
 export { ContactForm } from "@/components/forms/ContactForm";
 export { CareerApplicationForm } from "@/components/forms/CareerApplicationForm";
+export { NewsletterForm } from "@/components/forms/NewsletterForm";
+export { DatabaseEmptyState } from "@/components/feedback/DatabaseEmptyState";

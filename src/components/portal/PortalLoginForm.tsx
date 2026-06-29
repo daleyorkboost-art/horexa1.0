@@ -7,6 +7,7 @@ import { Eye, Lock, Mail, MessageCircle, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getCaptchaToken } from "@/lib/security/recaptcha-client";
 
 type LoginMode = "password" | "otp" | "reset";
 
@@ -28,9 +29,11 @@ export function PortalLoginForm() {
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
+    const captchaToken = await getCaptchaToken("portal_password_login");
     const result = await signIn("credentials", {
       email: String(formData.get("email") ?? ""),
       password: String(formData.get("password") ?? ""),
+      captchaToken,
       redirect: false,
       callbackUrl: "/portal/dashboard",
     });
@@ -48,10 +51,11 @@ export function PortalLoginForm() {
     setStatus("submitting");
     setMessage("");
 
+    const captchaToken = await getCaptchaToken("portal_otp_request");
     const response = await fetch("/api/auth/otp/request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ identifier }),
+      body: JSON.stringify({ identifier, captchaToken }),
     });
 
     if (!response.ok) {
@@ -71,9 +75,11 @@ export function PortalLoginForm() {
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
+    const captchaToken = await getCaptchaToken("portal_otp_login");
     const result = await signIn("credentials", {
       email: identifier,
       otp: String(formData.get("otp") ?? ""),
+      captchaToken,
       redirect: false,
       callbackUrl: "/portal/dashboard",
     });
@@ -93,10 +99,11 @@ export function PortalLoginForm() {
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
+    const captchaToken = await getCaptchaToken(resetToken ? "portal_password_reset_confirm" : "portal_password_reset_request");
     const endpoint = resetToken ? "/api/auth/password-reset/confirm" : "/api/auth/password-reset/request";
     const payload = resetToken
-      ? { token: resetToken, password: String(formData.get("password") ?? "") }
-      : { email: String(formData.get("email") ?? "") };
+      ? { token: resetToken, password: String(formData.get("password") ?? ""), captchaToken }
+      : { email: String(formData.get("email") ?? ""), captchaToken };
 
     const response = await fetch(endpoint, {
       method: "POST",

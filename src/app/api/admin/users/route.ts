@@ -5,6 +5,7 @@ import { writeAuditLog } from "@/lib/api/audit";
 import { buildSearchWhere, paginationMeta, parseListQuery } from "@/lib/api/query";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
+import { assertSameOrigin } from "@/lib/security/request";
 import { userCreateSchema } from "@/lib/validators/admin";
 
 export async function GET(request: Request) {
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
   if (!auth.ok) return auth.response;
 
   try {
+    assertSameOrigin(request);
     const body = await parseJson(request);
     const { password, ...data } = userCreateSchema.parse(body);
     const passwordHash = password ? await hash(password, 12) : undefined;

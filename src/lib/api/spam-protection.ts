@@ -6,7 +6,7 @@ export async function verifyCaptchaToken(token: unknown, remoteIp?: string | nul
   const secret = process.env.RECAPTCHA_SECRET_KEY;
 
   if (!secret) {
-    return true;
+    return process.env.NODE_ENV !== "production";
   }
 
   if (typeof token !== "string" || token.length < 20) {

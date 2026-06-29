@@ -3,7 +3,10 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
+import { recordAndCheckRateLimit } from "@/lib/api/rate-limit";
+import { verifyCaptchaToken } from "@/lib/api/spam-protection";
 import { prisma } from "@/lib/db";
+import { normalizeIdentifier } from "@/lib/security/request";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -16,6 +19,8 @@ export const authOptions: NextAuthOptions = {
   secret: authSecret,
   session: {
     strategy: "jwt",
+    maxAge: 8 * 60 * 60,
+    updateAge: 15 * 60,
   },
   pages: {
     signIn: "/portal/login",
@@ -27,13 +32,30 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
         otp: { label: "OTP", type: "text" },
+        captchaToken: { label: "Captcha", type: "text" },
       },
       async authorize(credentials) {
-        const identifier = credentials?.email?.toLowerCase().trim();
+        const identifier = normalizeIdentifier(credentials?.email);
         const password = credentials?.password;
         const otp = credentials?.otp?.trim();
+        const captchaToken = credentials?.captchaToken;
 
         if (!identifier || (!password && !otp)) {
+          return null;
+        }
+
+        if (!(await verifyCaptchaToken(captchaToken))) {
+          return null;
+        }
+
+        const limited = await recordAndCheckRateLimit({
+          key: `credentials:${identifier}`,
+          scope: "credentials-login",
+          limit: 10,
+          windowMs: 10 * 60_000,
+        });
+
+        if (limited.limited) {
           return null;
         }
 
@@ -117,6 +139,17 @@ export const authOptions: NextAuthOptions = {
       : []),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        const email = normalizeIdentifier(user.email);
+        if (!email) return false;
+
+        const existingUser = await prisma.user.findUnique({ where: { email } });
+        return Boolean(existingUser?.isActive);
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role ?? "CLIENT";
@@ -126,10 +159,39 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = String(token.id ?? "");
-        session.user.role = String(token.role ?? "CLIENT");
+        const userId = String(token.id ?? "");
+        const user = userId ? await prisma.user.findUnique({ where: { id: userId }, select: { role: true, isActive: true } }) : null;
+        session.user.id = userId;
+        session.user.role = user?.isActive ? user.role : "CLIENT";
       }
       return session;
+    },
+  },
+  events: {
+    async signIn({ user, account }) {
+      await prisma.auditLog
+        .create({
+          data: {
+            actorId: user.id,
+            action: "LOGIN",
+            entity: "User",
+            entityId: user.id,
+            metadata: { provider: account?.provider },
+          },
+        })
+        .catch(() => undefined);
+    },
+    async signOut({ token }) {
+      await prisma.auditLog
+        .create({
+          data: {
+            actorId: typeof token?.id === "string" ? token.id : undefined,
+            action: "LOGOUT",
+            entity: "User",
+            entityId: typeof token?.id === "string" ? token.id : undefined,
+          },
+        })
+        .catch(() => undefined);
     },
   },
 };

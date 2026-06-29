@@ -20,7 +20,7 @@ CREATE TYPE "TicketPriority" AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'URGENT');
 CREATE TYPE "NotificationType" AS ENUM ('INQUIRY', 'INSPECTION', 'REPORT', 'TICKET', 'INVOICE', 'SYSTEM');
 
 -- CreateEnum
-CREATE TYPE "CategoryType" AS ENUM ('SERVICE', 'PROJECT', 'BLOG', 'CAREER', 'DOCUMENT');
+CREATE TYPE "CategoryType" AS ENUM ('SERVICE', 'PROJECT', 'BLOG', 'CAREER', 'DOCUMENT', 'FAQ');
 
 -- CreateEnum
 CREATE TYPE "InvoiceStatus" AS ENUM ('DRAFT', 'SENT', 'PAID', 'OVERDUE', 'CANCELLED');
@@ -194,6 +194,22 @@ CREATE TABLE "Service" (
 );
 
 -- CreateTable
+CREATE TABLE "FAQ" (
+    "id" TEXT NOT NULL,
+    "question" TEXT NOT NULL,
+    "answer" TEXT NOT NULL,
+    "category" TEXT,
+    "categoryId" TEXT,
+    "serviceId" TEXT,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "status" "RecordStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "FAQ_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -245,6 +261,7 @@ CREATE TABLE "Inquiry" (
     "city" TEXT,
     "message" TEXT,
     "sourcePage" TEXT,
+    "serviceRequired" TEXT,
     "status" "InquiryStatus" NOT NULL DEFAULT 'NEW',
     "assignedTo" TEXT,
     "serviceId" TEXT,
@@ -311,6 +328,19 @@ CREATE TABLE "Application" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Application_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "NewsletterSubscription" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "sourcePage" TEXT,
+    "status" "RecordStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "NewsletterSubscription_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -601,6 +631,18 @@ CREATE INDEX "Service_category_idx" ON "Service"("category");
 CREATE INDEX "Service_sortOrder_idx" ON "Service"("sortOrder");
 
 -- CreateIndex
+CREATE INDEX "FAQ_serviceId_idx" ON "FAQ"("serviceId");
+
+-- CreateIndex
+CREATE INDEX "FAQ_category_idx" ON "FAQ"("category");
+
+-- CreateIndex
+CREATE INDEX "FAQ_status_idx" ON "FAQ"("status");
+
+-- CreateIndex
+CREATE INDEX "FAQ_sortOrder_idx" ON "FAQ"("sortOrder");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Project_slug_key" ON "Project"("slug");
 
 -- CreateIndex
@@ -659,6 +701,15 @@ CREATE INDEX "Application_status_idx" ON "Application"("status");
 
 -- CreateIndex
 CREATE INDEX "Application_createdAt_idx" ON "Application"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "NewsletterSubscription_email_key" ON "NewsletterSubscription"("email");
+
+-- CreateIndex
+CREATE INDEX "NewsletterSubscription_status_idx" ON "NewsletterSubscription"("status");
+
+-- CreateIndex
+CREATE INDEX "NewsletterSubscription_createdAt_idx" ON "NewsletterSubscription"("createdAt");
 
 -- CreateIndex
 CREATE INDEX "Testimonial_status_idx" ON "Testimonial"("status");
@@ -812,6 +863,12 @@ ALTER TABLE "ClientMember" ADD CONSTRAINT "ClientMember_userId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Service" ADD CONSTRAINT "Service_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FAQ" ADD CONSTRAINT "FAQ_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FAQ" ADD CONSTRAINT "FAQ_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;

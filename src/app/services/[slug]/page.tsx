@@ -14,19 +14,22 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { industries, processSteps, services, stats } from "@/lib/site-data";
+import {
+  getPublicService,
+  industries,
+  processSteps,
+  stats,
+} from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 type ServiceDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return services.map((service) => ({ slug: service.slug }));
-}
-
 export async function generateMetadata({ params }: ServiceDetailPageProps) {
   const { slug } = await params;
-  const service = services.find((item) => item.slug === slug);
+  const service = await getPublicService(slug);
 
   return {
     title: service ? `${service.title} | Horexa Solutions` : "Service | Horexa Solutions",
@@ -54,7 +57,7 @@ export async function generateMetadata({ params }: ServiceDetailPageProps) {
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
   const { slug } = await params;
-  const service = services.find((item) => item.slug === slug);
+  const service = await getPublicService(slug);
 
   if (!service) {
     notFound();
@@ -67,7 +70,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           "@context": "https://schema.org",
           "@type": "Service",
           name: service.title,
-          description: service.longDescription,
+          description: service.description,
           provider: {
             "@type": "LocalBusiness",
             name: "Horexa Solutions",
@@ -94,7 +97,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         eyebrow="Service Scope"
         title={service.title}
         highlight="by Horexa"
-        description={service.longDescription}
+        description={service.description}
         imageSrc={service.image}
       />
 
@@ -157,19 +160,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             <section>
               <SectionHeading align="left" eyebrow="FAQ" title="Common questions." />
               <div className="mt-8">
-                <FAQAccordion
-                  items={[
-                    ...service.faqs,
-                    {
-                      question: "Can this be included in an AMC plan?",
-                      answer: "Yes. Horexa can include this service within quarterly, bi-monthly, annual, or custom AMC schedules.",
-                    },
-                    {
-                      question: "Do you support emergency inspections?",
-                      answer: "Urgent inspection slots can be arranged based on team availability and city coverage.",
-                    },
-                  ]}
-                />
+                {service.faqs.length ? <FAQAccordion items={service.faqs} /> : <Card className="p-6 text-sm text-muted-foreground">No FAQs have been published for this service yet.</Card>}
               </div>
             </section>
           </div>

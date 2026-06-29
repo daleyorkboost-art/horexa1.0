@@ -4,7 +4,9 @@ import { Award, ShieldCheck } from "lucide-react";
 import { AnimatedCounter, CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { images, standards, stats, values } from "@/lib/site-data";
+import { dynamicPublicImages as images, getPublicAboutContent } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "About Horexa Solutions",
@@ -24,7 +26,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const about = await getPublicAboutContent();
+
   return (
     <SiteFrame activeHref="/about">
       <PageHero
@@ -50,14 +54,14 @@ export default function AboutPage() {
                 <Award className="text-primary" aria-hidden />
                 <h3 className="mt-4 text-2xl font-black">Mission</h3>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  Make commercial kitchens cleaner, safer, and easier to maintain through disciplined hygiene systems.
+                  {about.mission}
                 </p>
               </div>
               <div className="rounded-lg border border-border bg-background/45 p-5">
                 <ShieldCheck className="text-primary" aria-hidden />
                 <h3 className="mt-4 text-2xl font-black">Vision</h3>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  Become India&apos;s most trusted kitchen hygiene partner for hospitality and food-service brands.
+                  {about.vision}
                 </p>
               </div>
             </div>
@@ -69,7 +73,7 @@ export default function AboutPage() {
         <div className="industrial-container relative">
           <SectionHeading eyebrow="Values" title="What Guides Our Work" />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
-            {values.map((value) => (
+            {about.values.map((value) => (
               <FeatureCard key={value.title} {...value} />
             ))}
           </div>
@@ -84,22 +88,22 @@ export default function AboutPage() {
             description="Horexa combines site supervisors, trained cleaning crews, operations coordinators and documentation support for predictable service quality."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {["Senior Inspection Lead", "AMC Operations Coordinator", "Compliance Documentation Specialist"].map((role, index) => (
-              <Card key={role} className="overflow-hidden p-0">
+            {about.teamRoles.map((member) => (
+              <Card key={member.role} className="overflow-hidden p-0">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={images.team}
-                    alt={`${role} at Horexa Solutions`}
+                    alt={`${member.role} at Horexa Solutions`}
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"
                     className="object-cover"
                   />
                 </div>
                 <div className="p-6">
-                  <Badge variant="secondary">{["Site Safety", "Service Calendar", "Audit Records"][index]}</Badge>
-                  <h3 className="mt-4 text-2xl font-black">{role}</h3>
+                  <Badge variant="secondary">{member.badge}</Badge>
+                  <h3 className="mt-4 text-2xl font-black">{member.role}</h3>
                   <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                    Responsible for safe execution, clear client communication, clean handovers and reliable follow-up records.
+                    {member.description}
                   </p>
                 </div>
               </Card>
@@ -112,7 +116,7 @@ export default function AboutPage() {
         <div className="industrial-container relative">
           <SectionHeading eyebrow="Safety Standards" title="Compliance-Minded From Start to Report" />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {standards.map((standard) => (
+            {about.standards.map((standard) => (
               <FeatureCard key={standard.title} {...standard} />
             ))}
           </div>
@@ -123,7 +127,7 @@ export default function AboutPage() {
         <div className="industrial-container">
           <SectionHeading eyebrow="Statistics" title="Built for Measurable Outcomes" />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
+            {about.stats.map((stat) => (
               <AnimatedCounter key={stat.label} {...stat} />
             ))}
           </div>

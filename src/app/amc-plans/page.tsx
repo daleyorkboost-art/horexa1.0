@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
-import { AMCPricingCard, ContactForm, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { AMCPricingCard, ContactForm, DatabaseEmptyState, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { amcPlans, images } from "@/lib/site-data";
+import { dynamicPublicImages as images, getPublicAmcPlans, getPublicServices } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Kitchen Exhaust AMC Contracts",
@@ -32,7 +34,9 @@ const comparisonRows = [
   ["Audit reminders", "Email", "WhatsApp + email", "Monthly review call"],
 ];
 
-export default function AMCPlansPage() {
+export default async function AMCPlansPage() {
+  const [amcPlans, services] = await Promise.all([getPublicAmcPlans(), getPublicServices()]);
+
   return (
     <SiteFrame activeHref="/amc-plans">
       <PageHero
@@ -53,9 +57,13 @@ export default function AMCPlansPage() {
             description="AMC is not a discount package. It is a managed service rhythm that helps operators stay ready for audits, renewals and internal safety checks."
           />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {amcPlans.map((plan) => (
-              <AMCPricingCard key={plan.name} {...plan} href="/contact" />
-            ))}
+            {amcPlans.length ? (
+              amcPlans.map((plan) => <AMCPricingCard key={plan.id} {...plan} href="/contact" />)
+            ) : (
+              <div className="lg:col-span-3">
+                <DatabaseEmptyState title="No AMC plans published yet" description="Publish AMC plan records in the database to populate this page." />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -116,7 +124,7 @@ export default function AMCPlansPage() {
               )}
             </div>
           </div>
-          <ContactForm />
+          <ContactForm services={services} amcPlans={amcPlans} sourcePage="/amc-plans" defaultService="AMC Inquiry" mode="amc" />
         </div>
       </section>
     </SiteFrame>

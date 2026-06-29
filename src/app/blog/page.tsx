@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { BlogExplorer } from "@/components/sections/BlogExplorer";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { PageHero, SectionHeading, SiteFrame } from "@/components";
-import { images } from "@/lib/site-data";
+import { DatabaseEmptyState, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { dynamicPublicImages as images, getPublicBlogPosts } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Kitchen Hygiene & Compliance Blog",
@@ -22,7 +24,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const blogPosts = await getPublicBlogPosts();
+
   return (
     <SiteFrame activeHref="/blog">
       <JsonLd
@@ -50,7 +54,11 @@ export default function BlogPage() {
             description="Clear checklists and field notes covering exhaust cleaning frequency, fire-risk causes, AMC planning and report readiness."
           />
           <div className="mt-12">
-            <BlogExplorer />
+            {blogPosts.length ? (
+              <BlogExplorer blogPosts={blogPosts} />
+            ) : (
+              <DatabaseEmptyState title="No blog posts published yet" description="Publish blog posts in the database to populate the blog." />
+            )}
           </div>
         </div>
       </section>

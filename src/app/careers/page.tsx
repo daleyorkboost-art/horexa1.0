@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { CareerApplicationForm, CTASection, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { CareerApplicationForm, CTASection, DatabaseEmptyState, FeatureCard, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { careerBenefits, images, jobs, values } from "@/lib/site-data";
+import { careerBenefits, dynamicPublicImages as images, getPublicCareers, values } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Careers at Horexa Solutions",
@@ -23,7 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const careers = await getPublicCareers();
+
   return (
     <SiteFrame activeHref="/careers">
       <PageHero
@@ -43,11 +47,12 @@ export default function CareersPage() {
             description="Horexa hires people who can work safely at night, communicate clearly with clients and take pride in clean handovers."
           />
           <div className="mt-12 grid gap-5">
-            {jobs.map((job) => (
-              <Card key={job.title} className="flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
+            {careers.length ? (
+              careers.map((job) => (
+              <Card key={job.id} className="flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
                 <div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant={job.status === "Open" ? "success" : "secondary"}>{job.status}</Badge>
+                    <Badge variant="success">Open</Badge>
                     <Badge variant="secondary">{job.location}</Badge>
                   </div>
                   <h2 className="mt-4 text-2xl font-black">{job.title}</h2>
@@ -55,11 +60,14 @@ export default function CareersPage() {
                     {job.type} | {job.experience}
                   </p>
                 </div>
-                <Button variant={job.status === "Open" ? "default" : "outline"} disabled={job.status !== "Open"}>
+                <Button>
                   Apply Now
                 </Button>
               </Card>
-            ))}
+              ))
+            ) : (
+              <DatabaseEmptyState title="No open roles published yet" description="Publish career records in the database to populate open positions." />
+            )}
           </div>
         </div>
       </section>
@@ -95,7 +103,7 @@ export default function CareersPage() {
             </div>
           </div>
 
-          <CareerApplicationForm />
+          <CareerApplicationForm careers={careers} />
         </div>
       </section>
 

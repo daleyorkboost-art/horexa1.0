@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { CTASection, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { CTASection, DatabaseEmptyState, PageHero, SectionHeading, SiteFrame } from "@/components";
 import { ProjectsFilter } from "@/components/sections/ProjectsFilter";
-import { images } from "@/lib/site-data";
+import { dynamicPublicImages as images, getPublicProjects } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Commercial Kitchen Cleaning Projects",
@@ -21,7 +23,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getPublicProjects();
+
   return (
     <SiteFrame activeHref="/projects">
       <PageHero
@@ -42,7 +46,11 @@ export default function ProjectsPage() {
             description="Review projects by asset type, grease level, duration and service scope to understand how Horexa plans work around live operations."
           />
           <div className="mt-12">
-            <ProjectsFilter />
+            {projects.length ? (
+              <ProjectsFilter projects={projects} />
+            ) : (
+              <DatabaseEmptyState title="No projects published yet" description="Publish project records in the database to populate the portfolio." />
+            )}
           </div>
         </div>
       </section>

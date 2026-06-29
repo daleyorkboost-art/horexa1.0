@@ -4,6 +4,7 @@ import { apiError, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
 import { prisma } from "@/lib/db";
+import { assertSameOrigin } from "@/lib/security/request";
 import { userUpdateSchema } from "@/lib/validators/admin";
 
 type RouteContext = {
@@ -41,6 +42,7 @@ export async function PATCH(request: Request, context: RouteContext) {
   if (!auth.ok) return auth.response;
 
   try {
+    assertSameOrigin(request);
     const { id } = await context.params;
     const body = await parseJson(request);
     const { password, email, ...data } = userUpdateSchema.parse(body);
@@ -81,14 +83,19 @@ export async function DELETE(_request: Request, context: RouteContext) {
   const auth = await requireRoles(roleGroups.superAdmin);
   if (!auth.ok) return auth.response;
 
-  const { id } = await context.params;
-  await prisma.user.delete({ where: { id } });
-  await writeAuditLog({
-    actorId: auth.session.user?.id,
-    action: "DELETE",
-    entity: "User",
-    entityId: id,
-    request: _request,
-  });
-  return ok({ deleted: true });
+  try {
+    assertSameOrigin(_request);
+    const { id } = await context.params;
+    await prisma.user.delete({ where: { id } });
+    await writeAuditLog({
+      actorId: auth.session.user?.id,
+      action: "DELETE",
+      entity: "User",
+      entityId: id,
+      request: _request,
+    });
+    return ok({ deleted: true });
+  } catch (error) {
+    return apiError(error);
+  }
 }

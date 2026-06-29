@@ -1,5 +1,5 @@
 import { AdminModulePage } from "@/components/admin/AdminModulePage";
 
 export default function AdminInspectionsPage() {
-  return <AdminModulePage moduleKey="inspections" />;
+  return <AdminModulePage moduleKey="reports" />;
 }

@@ -1,19 +1,24 @@
 import { randomBytes } from "crypto";
 import { hash } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
-import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
+import { checkPersistentRateLimit, checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/email/mailer";
+import { assertCaptcha, assertSameOrigin } from "@/lib/security/request";
 import { passwordResetRequestSchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "password-reset-request"), 5, 10 * 60_000, request);
-  if (limited) return limited;
-
   try {
+    assertSameOrigin(request);
+    const limited = checkRateLimit(rateLimitKey(request, "password-reset-request"), 5, 10 * 60_000, request);
+    if (limited) return limited;
+
     const body = await parseJson(request);
-    const { email } = passwordResetRequestSchema.parse(body);
-    const normalized = email.toLowerCase().trim();
+    const { email, captchaToken } = passwordResetRequestSchema.parse(body);
+    await assertCaptcha(request, captchaToken);
+    const identifierLimit = await checkPersistentRateLimit(`password-reset:${email}`, "password-reset-request", 3, 30 * 60_000, request);
+    if (identifierLimit) return identifierLimit;
+    const normalized = email;
     const user = await prisma.user.findUnique({ where: { email: normalized } });
 
     if (user) {

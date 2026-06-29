@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
-import { services } from "@/lib/site-data";
+import { prisma } from "@/lib/db";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://horexasolutions.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/about",
@@ -15,6 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
   ];
 
+  const services = await prisma.service
+    .findMany({
+      where: { status: { in: ["ACTIVE", "PUBLISHED"] } },
+      select: { slug: true, updatedAt: true },
+    })
+    .catch(() => []);
+
   return [
     ...staticRoutes.map((route) => ({
       url: `${baseUrl}${route}`,
@@ -24,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...services.map((service) => ({
       url: `${baseUrl}/services/${service.slug}`,
-      lastModified: new Date(),
+      lastModified: service.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.75,
     })),

@@ -1,17 +1,21 @@
 import { compare } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
-import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
+import { checkPersistentRateLimit, checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { prisma } from "@/lib/db";
+import { assertSameOrigin } from "@/lib/security/request";
 import { otpVerifySchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "otp-verify"), 10, 10 * 60_000);
-  if (limited) return limited;
-
   try {
+    assertSameOrigin(request);
+    const limited = checkRateLimit(rateLimitKey(request, "otp-verify"), 10, 10 * 60_000);
+    if (limited) return limited;
+
     const body = await parseJson(request);
     const { identifier, otp } = otpVerifySchema.parse(body);
-    const normalized = identifier.toLowerCase().trim();
+    const identifierLimit = await checkPersistentRateLimit(`otp-verify:${identifier}`, "otp-verify", 8, 10 * 60_000, request);
+    if (identifierLimit) return identifierLimit;
+    const normalized = identifier;
     const token = await prisma.oTPToken.findFirst({
       where: {
         identifier: normalized,

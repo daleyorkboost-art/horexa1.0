@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Filter, Search } from "lucide-react";
-import { CTASection, PageHero, SectionHeading, ServiceCard, SiteFrame } from "@/components";
+import { CTASection, DatabaseEmptyState, PageHero, SectionHeading, ServiceCard, SiteFrame } from "@/components";
 import { Badge } from "@/components/ui/badge";
-import { images, services } from "@/lib/site-data";
+import { dynamicPublicImages as images, getPublicServices } from "@/lib/public-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Commercial Kitchen Hygiene Services",
@@ -22,9 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
-const filters = ["All Services", "Exhaust Systems", "Maintenance", "Compliance", "Water Hygiene"];
+export default async function ServicesPage() {
+  const services = await getPublicServices();
+  const filters = ["All Services", ...Array.from(new Set(services.map((service) => service.category).filter(Boolean)))];
 
-export default function ServicesPage() {
   return (
     <SiteFrame activeHref="/services">
       <PageHero
@@ -52,15 +55,21 @@ export default function ServicesPage() {
             ))}
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <ServiceCard
-                key={service.slug}
-                icon={service.icon}
-                title={service.title}
-                description={service.description}
-                href={`/services/${service.slug}`}
-              />
-            ))}
+            {services.length ? (
+              services.map((service) => (
+                <ServiceCard
+                  key={service.slug}
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.summary}
+                  href={`/services/${service.slug}`}
+                />
+              ))
+            ) : (
+              <div className="md:col-span-2 lg:col-span-3">
+                <DatabaseEmptyState title="No services published yet" description="Create and publish service records in the database to populate this page." />
+              </div>
+            )}
           </div>
         </div>
       </section>

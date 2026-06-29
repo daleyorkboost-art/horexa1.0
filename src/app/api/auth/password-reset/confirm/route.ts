@@ -2,15 +2,18 @@ import { compare, hash } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { prisma } from "@/lib/db";
+import { assertCaptcha, assertSameOrigin } from "@/lib/security/request";
 import { passwordResetConfirmSchema } from "@/lib/validators/admin";
 
 export async function POST(request: Request) {
-  const limited = checkRateLimit(rateLimitKey(request, "password-reset-confirm"), 10, 10 * 60_000);
-  if (limited) return limited;
-
   try {
+    assertSameOrigin(request);
+    const limited = checkRateLimit(rateLimitKey(request, "password-reset-confirm"), 10, 10 * 60_000);
+    if (limited) return limited;
+
     const body = await parseJson(request);
-    const { token, password } = passwordResetConfirmSchema.parse(body);
+    const { token, password, captchaToken } = passwordResetConfirmSchema.parse(body);
+    await assertCaptcha(request, captchaToken);
     const candidates = await prisma.passwordResetToken.findMany({
       where: {
         consumedAt: null,

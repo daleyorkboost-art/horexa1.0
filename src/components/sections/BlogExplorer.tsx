@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { Mail, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { BlogCard } from "@/components";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { blogPosts } from "@/lib/site-data";
 
 const categories = [
   "All Topics",
@@ -20,7 +20,17 @@ const categories = [
   "Case Studies",
 ];
 
-export function BlogExplorer() {
+type BlogPost = {
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  image: string;
+  href: string;
+};
+
+export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All Topics");
   const featured = blogPosts[0];
@@ -31,8 +41,12 @@ export function BlogExplorer() {
         const matchesQuery = post.title.toLowerCase().includes(query.toLowerCase());
         return matchesCategory && matchesQuery;
       }),
-    [category, query],
+    [blogPosts, category, query],
   );
+
+  if (!featured) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-12">
@@ -132,11 +146,7 @@ export function BlogExplorer() {
             </div>
           </Card>
           <Card className="p-6">
-            <Mail className="text-primary" aria-hidden />
-            <h2 className="mt-4 text-xl font-black">Newsletter</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Newsletter capture will be enabled after the subscription workflow and data model are finalized.
-            </p>
+            <NewsletterForm />
           </Card>
         </aside>
       </div>

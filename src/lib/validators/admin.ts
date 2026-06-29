@@ -1,4 +1,15 @@
 import { z } from "zod";
+import { normalizeIdentifier, sanitizeText } from "@/lib/security/request";
+
+const passwordSchema = z
+  .string()
+  .min(12, "Password must be at least 12 characters")
+  .regex(/[a-z]/, "Password must include a lowercase letter")
+  .regex(/[A-Z]/, "Password must include an uppercase letter")
+  .regex(/[0-9]/, "Password must include a number")
+  .regex(/[^A-Za-z0-9]/, "Password must include a symbol");
+
+const captchaSchema = z.string().optional();
 
 export const idSchema = z.object({
   id: z.string().min(1),
@@ -48,14 +59,14 @@ export const amcPlanSchema = z.object({
 });
 
 export const inquirySchema = z.object({
-  fullName: z.string().min(2),
-  phone: z.string().min(7),
-  email: z.string().email(),
-  businessName: z.string().optional(),
-  city: z.string().optional(),
-  message: z.string().optional(),
-  sourcePage: z.string().optional(),
-  serviceRequired: z.string().optional(),
+  fullName: z.string().min(2).transform(sanitizeText),
+  phone: z.string().min(7).transform(sanitizeText),
+  email: z.string().email().transform(normalizeIdentifier),
+  businessName: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
+  city: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
+  message: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
+  sourcePage: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
+  serviceRequired: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
   serviceId: z.string().optional(),
   amcPlanId: z.string().optional(),
 });
@@ -88,11 +99,11 @@ export const careerSchema = z.object({
 
 export const applicationSchema = z.object({
   careerId: z.string().optional(),
-  fullName: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().optional(),
+  fullName: z.string().min(2).transform(sanitizeText),
+  email: z.string().email().transform(normalizeIdentifier),
+  phone: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
   resumeUrl: z.string().url().optional(),
-  message: z.string().optional(),
+  message: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
 });
 
 export const testimonialSchema = z.object({
@@ -155,8 +166,8 @@ export const documentSchema = z.object({
 
 export const supportTicketSchema = z.object({
   clientId: z.string().optional(),
-  subject: z.string().min(2),
-  message: z.string().min(5),
+  subject: z.string().min(2).transform(sanitizeText),
+  message: z.string().min(5).transform(sanitizeText),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
 });
 
@@ -189,10 +200,10 @@ export const invoiceSchema = z.object({
 });
 
 export const userCreateSchema = z.object({
-  name: z.string().min(2).optional(),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  password: z.string().min(8).optional(),
+  name: z.string().min(2).optional().transform((value) => (value ? sanitizeText(value) : value)),
+  email: z.string().email().transform(normalizeIdentifier),
+  phone: z.string().optional().transform((value) => (value ? sanitizeText(value) : value)),
+  password: passwordSchema.optional(),
   role: z.enum(["SUPER_ADMIN", "ADMIN", "EDITOR", "OPERATIONS", "CLIENT"]).default("CLIENT"),
   isActive: z.boolean().optional(),
 });
@@ -247,19 +258,22 @@ export const newsletterSchema = z.object({
 });
 
 export const otpRequestSchema = z.object({
-  identifier: z.string().min(5),
+  identifier: z.string().min(5).transform(normalizeIdentifier),
+  captchaToken: captchaSchema,
 });
 
 export const otpVerifySchema = z.object({
-  identifier: z.string().min(5),
+  identifier: z.string().min(5).transform(normalizeIdentifier),
   otp: z.string().length(6),
 });
 
 export const passwordResetRequestSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().transform(normalizeIdentifier),
+  captchaToken: captchaSchema,
 });
 
 export const passwordResetConfirmSchema = z.object({
   token: z.string().min(20),
-  password: z.string().min(8),
+  password: passwordSchema,
+  captchaToken: captchaSchema,
 });

@@ -15,6 +15,7 @@ const services = [
     description:
       "End-to-end kitchen exhaust duct cleaning for hotels, restaurants, cloud kitchens, hospitals, and institutional kitchens. The service covers inspection, grease removal, hood and filter cleaning, fan cleaning, and post-cleaning documentation.",
     category: "Exhaust Systems",
+    icon: "Fan",
     imageUrl: "/images/service-exhaust-hero.webp",
     sortOrder: 1,
     status: "PUBLISHED",
@@ -28,6 +29,7 @@ const services = [
     description:
       "Scheduled hood and filter cleaning keeps kitchen ventilation efficient, reduces odour, and lowers grease-fire risk between deep duct cleaning cycles.",
     category: "Kitchen Hygiene",
+    icon: "Filter",
     imageUrl: "/images/kitchen-bg.webp",
     sortOrder: 2,
     status: "PUBLISHED",
@@ -39,6 +41,7 @@ const services = [
     description:
       "Inspection-led ventilation hygiene services for duct pathways, extraction points, fans, and airflow-critical surfaces.",
     category: "Ventilation",
+    icon: "Fan",
     imageUrl: "/images/hero-workers.webp",
     sortOrder: 3,
     status: "PUBLISHED",
@@ -50,6 +53,7 @@ const services = [
     description:
       "Mechanical and chemical water tank cleaning support for hospitality and institutional facilities that need hygienic water storage.",
     category: "Facility Hygiene",
+    icon: "Droplets",
     imageUrl: "/images/access-panel.webp",
     sortOrder: 4,
     status: "PUBLISHED",
@@ -61,6 +65,7 @@ const services = [
     description:
       "Access panel planning and installation so exhaust ducts can be inspected, cleaned, and documented properly during future services.",
     category: "Compliance",
+    icon: "Wrench",
     imageUrl: "/images/access-panel.webp",
     sortOrder: 5,
     status: "PUBLISHED",
@@ -72,9 +77,48 @@ const services = [
     description:
       "Risk-focused inspection, cleaning recommendations, documentation, and maintenance planning for commercial kitchens with heavy grease load.",
     category: "Fire Safety",
+    icon: "Flame",
     imageUrl: "/images/blog-featured.webp",
     sortOrder: 6,
     status: "PUBLISHED",
+  },
+];
+
+const faqs = [
+  {
+    id: "seed-faq-exhaust-frequency",
+    serviceSlug: "kitchen-exhaust-duct-cleaning",
+    question: "How often should kitchen exhaust ducts be cleaned?",
+    answer:
+      "Cleaning frequency depends on cooking volume, grease load, and audit requirements. High-volume hotel, restaurant, and cloud kitchen exhaust systems usually need more frequent scheduled cleaning than low-volume kitchens.",
+    category: "Exhaust Systems",
+    sortOrder: 1,
+  },
+  {
+    id: "seed-faq-exhaust-reporting",
+    serviceSlug: "kitchen-exhaust-duct-cleaning",
+    question: "Do you provide before and after documentation?",
+    answer:
+      "Yes. Horexa records before and after photos, service notes, recommendations, and report links so facility teams can keep audit-ready documentation.",
+    category: "Exhaust Systems",
+    sortOrder: 2,
+  },
+  {
+    id: "seed-faq-amc-custom",
+    serviceSlug: "fire-risk-reduction-support",
+    question: "Can the maintenance frequency be customized?",
+    answer:
+      "Yes. AMC and risk-reduction schedules can be aligned to kitchen operating hours, grease load, inspection history, and compliance deadlines.",
+    category: "AMC",
+    sortOrder: 3,
+  },
+  {
+    id: "seed-faq-career-apply",
+    question: "Can candidates apply without selecting an open role?",
+    answer:
+      "Yes. Candidates can submit an open application and Horexa can review it for future technician, field service, sales, or operations roles.",
+    category: "Careers",
+    sortOrder: 4,
   },
 ];
 
@@ -215,8 +259,28 @@ const seoRoutes = [
 ];
 
 try {
+  const serviceRecords = new Map();
   for (const service of services) {
-    await prisma.service.upsert({ where: { slug: service.slug }, update: service, create: service });
+    const record = await prisma.service.upsert({ where: { slug: service.slug }, update: service, create: service });
+    serviceRecords.set(service.slug, record);
+  }
+
+  for (const faq of faqs) {
+    const { serviceSlug, ...data } = faq;
+    const service = serviceSlug ? serviceRecords.get(serviceSlug) : null;
+    await prisma.fAQ.upsert({
+      where: { id: data.id },
+      update: {
+        ...data,
+        serviceId: service?.id,
+        status: "ACTIVE",
+      },
+      create: {
+        ...data,
+        serviceId: service?.id,
+        status: "ACTIVE",
+      },
+    });
   }
 
   for (const plan of amcPlans) {
@@ -266,6 +330,7 @@ try {
         phone: "+91 98765 43210",
         email: "info@horexasolutions.com",
         hours: "Mon-Sat 9:00 AM - 7:00 PM",
+        headquarters: "Delhi NCR",
         serviceAreas: ["Delhi NCR", "Mumbai", "Bangalore", "Hyderabad", "Pune", "Chennai", "All Major Cities"],
       },
     },
@@ -275,7 +340,71 @@ try {
         phone: "+91 98765 43210",
         email: "info@horexasolutions.com",
         hours: "Mon-Sat 9:00 AM - 7:00 PM",
+        headquarters: "Delhi NCR",
         serviceAreas: ["Delhi NCR", "Mumbai", "Bangalore", "Hyderabad", "Pune", "Chennai", "All Major Cities"],
+      },
+    },
+  });
+
+  await prisma.websiteSetting.upsert({
+    where: { key: "about" },
+    update: {
+      value: {
+        mission: "Make commercial kitchens cleaner, safer, and easier to maintain through disciplined hygiene systems.",
+        vision: "Become India's most trusted kitchen hygiene partner for hospitality and food-service brands.",
+        values: [
+          { title: "Safety First", description: "Every visit starts with access, isolation, PPE and fire-risk checks before cleaning begins.", icon: "Target" },
+          { title: "Audit Discipline", description: "Reports, photos and service logs are written for engineering teams, insurers and inspectors.", icon: "FileCheck2" },
+          { title: "Field Ownership", description: "Supervisors close each site with a handover, findings summary and next-service recommendation.", icon: "Users" },
+          { title: "Measured Maintenance", description: "Grease load, airflow issues and overdue assets are tracked so service frequency stays realistic.", icon: "Gauge" },
+          { title: "Transparent Advice", description: "Clients get clear recommendations without unnecessary upselling or vague compliance claims.", icon: "Handshake" },
+        ],
+        teamRoles: [
+          { role: "Senior Inspection Lead", badge: "Site Safety", description: "Responsible for access checks, grease-load assessment, safe execution, and client handover." },
+          { role: "AMC Operations Coordinator", badge: "Service Calendar", description: "Maintains client service schedules, reminders, team allocation, and post-visit follow-up." },
+          { role: "Compliance Documentation Specialist", badge: "Audit Records", description: "Organizes before/after photos, report records, and inspection documentation for client review." },
+        ],
+        standards: [
+          { title: "NFPA 96 Aligned", description: "Cleaning scopes and service records structured around recognized commercial exhaust safety standards.", icon: "ShieldCheck" },
+          { title: "Controlled Chemical Handling", description: "Professional degreasers selected for grease removal, staff safety and responsible wastewater control.", icon: "Leaf" },
+          { title: "Audit-Ready Reporting", description: "Photo-backed inspection records for fire audits, insurance reviews and internal engineering checks.", icon: "FileCheck2" },
+        ],
+        stats: [
+          { value: 96, suffix: "%", label: "Report Completion", description: "AMC visits include photo-backed service documentation." },
+          { value: 24, suffix: "h", label: "Critical Response", description: "Priority inspection windows for active AMC clients." },
+          { value: 7, suffix: "+", label: "Service Markets", description: "Coverage across major Indian hospitality hubs." },
+          { value: 180, suffix: "+", label: "Maintained Assets", description: "Hoods, ducts, tanks and ventilation assets tracked in service calendars." },
+        ],
+      },
+    },
+    create: {
+      key: "about",
+      value: {
+        mission: "Make commercial kitchens cleaner, safer, and easier to maintain through disciplined hygiene systems.",
+        vision: "Become India's most trusted kitchen hygiene partner for hospitality and food-service brands.",
+        values: [
+          { title: "Safety First", description: "Every visit starts with access, isolation, PPE and fire-risk checks before cleaning begins.", icon: "Target" },
+          { title: "Audit Discipline", description: "Reports, photos and service logs are written for engineering teams, insurers and inspectors.", icon: "FileCheck2" },
+          { title: "Field Ownership", description: "Supervisors close each site with a handover, findings summary and next-service recommendation.", icon: "Users" },
+          { title: "Measured Maintenance", description: "Grease load, airflow issues and overdue assets are tracked so service frequency stays realistic.", icon: "Gauge" },
+          { title: "Transparent Advice", description: "Clients get clear recommendations without unnecessary upselling or vague compliance claims.", icon: "Handshake" },
+        ],
+        teamRoles: [
+          { role: "Senior Inspection Lead", badge: "Site Safety", description: "Responsible for access checks, grease-load assessment, safe execution, and client handover." },
+          { role: "AMC Operations Coordinator", badge: "Service Calendar", description: "Maintains client service schedules, reminders, team allocation, and post-visit follow-up." },
+          { role: "Compliance Documentation Specialist", badge: "Audit Records", description: "Organizes before/after photos, report records, and inspection documentation for client review." },
+        ],
+        standards: [
+          { title: "NFPA 96 Aligned", description: "Cleaning scopes and service records structured around recognized commercial exhaust safety standards.", icon: "ShieldCheck" },
+          { title: "Controlled Chemical Handling", description: "Professional degreasers selected for grease removal, staff safety and responsible wastewater control.", icon: "Leaf" },
+          { title: "Audit-Ready Reporting", description: "Photo-backed inspection records for fire audits, insurance reviews and internal engineering checks.", icon: "FileCheck2" },
+        ],
+        stats: [
+          { value: 96, suffix: "%", label: "Report Completion", description: "AMC visits include photo-backed service documentation." },
+          { value: 24, suffix: "h", label: "Critical Response", description: "Priority inspection windows for active AMC clients." },
+          { value: 7, suffix: "+", label: "Service Markets", description: "Coverage across major Indian hospitality hubs." },
+          { value: 180, suffix: "+", label: "Maintained Assets", description: "Hoods, ducts, tanks and ventilation assets tracked in service calendars." },
+        ],
       },
     },
   });

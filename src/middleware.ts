@@ -6,7 +6,23 @@ const securityHeaders = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Cross-Origin-Resource-Policy": "same-origin",
 };
+
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "form-action 'self'",
+  "img-src 'self' data: blob: https://res.cloudinary.com",
+  "font-src 'self' data:",
+  "script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com",
+  "style-src 'self' 'unsafe-inline'",
+  "connect-src 'self' https://www.google.com https://www.gstatic.com https://res.cloudinary.com",
+  "frame-src https://www.google.com",
+].join("; ");
 
 const authSecret =
   process.env.NEXTAUTH_SECRET ??
@@ -18,6 +34,10 @@ export default withAuth(
 
     for (const [key, value] of Object.entries(securityHeaders)) {
       response.headers.set(key, value);
+    }
+    response.headers.set("Content-Security-Policy", contentSecurityPolicy);
+    if (process.env.NODE_ENV === "production") {
+      response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
     }
 
     return response;
@@ -47,5 +67,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*", "/portal/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
