@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ type NavbarProps = {
 
 export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const mobileMenuId = "mobile-primary-navigation";
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-[#07080b]/95 backdrop-blur-xl">
@@ -34,6 +34,7 @@ export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) 
             <Link
               key={item.href}
               href={item.href}
+              aria-current={activeHref === item.href ? "page" : undefined}
               className={cn(
                 "relative py-2 text-xs font-black uppercase tracking-[0.14em] text-zinc-400 transition hover:text-foreground",
                 activeHref === item.href && "text-primary",
@@ -66,43 +67,38 @@ export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) 
           onClick={() => setIsOpen((value) => !value)}
           aria-label="Toggle menu"
           aria-expanded={isOpen}
+          aria-controls={mobileMenuId}
         >
           {isOpen ? <X aria-hidden /> : <Menu aria-hidden />}
         </Button>
       </div>
 
-      <AnimatePresence>
-        {isOpen ? (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-secondary/95 lg:hidden"
-          >
-            <nav className="industrial-container flex flex-col gap-2 py-5" aria-label="Mobile navigation">
-              {mainNavigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-[0.12em] text-muted-foreground",
-                    activeHref === item.href && "bg-primary/10 text-primary",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Button asChild className="mt-2">
-                <Link href={ctaHref}>
-                  Request Inspection
-                  <ArrowRight data-icon="inline-end" />
-                </Link>
-              </Button>
-            </nav>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {isOpen ? (
+        <div className="overflow-hidden border-t border-border bg-secondary/95 lg:hidden">
+          <nav id={mobileMenuId} className="industrial-container flex flex-col gap-2 py-5" aria-label="Mobile navigation">
+            {mainNavigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={activeHref === item.href ? "page" : undefined}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-[0.12em] text-muted-foreground",
+                  activeHref === item.href && "bg-primary/10 text-primary",
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Button asChild className="mt-2">
+              <Link href={ctaHref}>
+                Request Inspection
+                <ArrowRight data-icon="inline-end" />
+              </Link>
+            </Button>
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 }

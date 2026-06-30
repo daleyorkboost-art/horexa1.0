@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { dynamicPublicImages as images, getPublicAmcPlans, getPublicServices } from "@/lib/public-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Kitchen Exhaust AMC Contracts",

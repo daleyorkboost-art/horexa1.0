@@ -33,6 +33,7 @@ export function ProjectsFilter({ projects }: { projects: Project[] }) {
             type="button"
             variant={category === item ? "default" : "outline"}
             size="sm"
+            aria-pressed={category === item}
             onClick={() => setCategory(item)}
           >
             {item}

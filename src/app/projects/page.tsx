@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CTASection, DatabaseEmptyState, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ProjectsFilter } from "@/components/sections/ProjectsFilter";
+import { absoluteUrl } from "@/lib/seo";
 import { dynamicPublicImages as images, getPublicProjects } from "@/lib/public-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Commercial Kitchen Cleaning Projects",
@@ -28,6 +30,19 @@ export default async function ProjectsPage() {
 
   return (
     <SiteFrame activeHref="/projects">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Horexa Project Evidence",
+          url: absoluteUrl("/projects"),
+          hasPart: projects.map((project) => ({
+            "@type": "CreativeWork",
+            name: project.title,
+            locationCreated: project.location,
+          })),
+        }}
+      />
       <PageHero
         activeLabel="Our Projects"
         eyebrow="Project Evidence"

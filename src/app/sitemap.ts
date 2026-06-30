@@ -1,20 +1,20 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
+import { siteUrl } from "@/lib/seo";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://horexasolutions.com";
-
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
   const staticRoutes = [
-    "",
-    "/about",
-    "/services",
-    "/amc-plans",
-    "/projects",
-    "/blog",
-    "/careers",
-    "/contact",
+    { route: "", priority: 1, changeFrequency: "weekly" as const },
+    { route: "/services", priority: 0.9, changeFrequency: "weekly" as const },
+    { route: "/amc-plans", priority: 0.85, changeFrequency: "weekly" as const },
+    { route: "/projects", priority: 0.8, changeFrequency: "weekly" as const },
+    { route: "/about", priority: 0.75, changeFrequency: "monthly" as const },
+    { route: "/blog", priority: 0.75, changeFrequency: "weekly" as const },
+    { route: "/careers", priority: 0.7, changeFrequency: "weekly" as const },
+    { route: "/contact", priority: 0.85, changeFrequency: "monthly" as const },
   ];
 
   const services = await prisma.service
@@ -26,13 +26,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes.map((route) => ({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: route === "" ? 1 : 0.8,
+      url: `${siteUrl}${route.route}`,
+      lastModified: now,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
     })),
     ...services.map((service) => ({
-      url: `${baseUrl}/services/${service.slug}`,
+      url: `${siteUrl}/services/${service.slug}`,
       lastModified: service.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.75,

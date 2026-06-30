@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { careerBenefits, dynamicPublicImages as images, getPublicCareers, values } from "@/lib/public-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Careers at Horexa Solutions",

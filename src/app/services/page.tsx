@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Filter, Search } from "lucide-react";
 import { CTASection, DatabaseEmptyState, PageHero, SectionHeading, ServiceCard, SiteFrame } from "@/components";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Badge } from "@/components/ui/badge";
+import { absoluteUrl } from "@/lib/seo";
 import { dynamicPublicImages as images, getPublicServices } from "@/lib/public-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Commercial Kitchen Hygiene Services",
@@ -30,6 +32,19 @@ export default async function ServicesPage() {
 
   return (
     <SiteFrame activeHref="/services">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Horexa commercial kitchen hygiene services",
+          itemListElement: services.map((service, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: absoluteUrl(`/services/${service.slug}`),
+            name: service.title,
+          })),
+        }}
+      />
       <PageHero
         activeLabel="Services"
         eyebrow="Service Scope"

@@ -33,6 +33,10 @@
     scroll-behavior: smooth;
   }
 
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
   body {
     @apply bg-background text-foreground;
     background-image:
@@ -90,6 +94,15 @@
     @apply pointer-events-none absolute inset-0 bg-industrial-radial opacity-80;
   }
 
+  .reveal-on-load {
+    animation: hero-reveal 0.58s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 900px;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -110,6 +123,17 @@
   }
 }
 
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes premium-reveal {
   from {
     opacity: 0;
@@ -125,7 +149,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .surface-card,
-  .reveal-on-scroll {
+  .reveal-on-scroll,
+  .reveal-on-load {
     animation: none;
   }
 }

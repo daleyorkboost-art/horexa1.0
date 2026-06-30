@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { BlogExplorer } from "@/components/sections/BlogExplorer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { DatabaseEmptyState, PageHero, SectionHeading, SiteFrame } from "@/components";
+import { absoluteUrl } from "@/lib/seo";
 import { dynamicPublicImages as images, getPublicBlogPosts } from "@/lib/public-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Kitchen Hygiene & Compliance Blog",
@@ -35,6 +36,13 @@ export default async function BlogPage() {
           "@type": "Blog",
           name: "Horexa Blog",
           description: "Kitchen hygiene, exhaust systems, fire safety, compliance and maintenance insights.",
+          blogPost: blogPosts.slice(0, 10).map((post) => ({
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt,
+            image: absoluteUrl(post.image),
+            datePublished: post.publishedAt ?? post.createdAt,
+          })),
         }}
       />
       <PageHero

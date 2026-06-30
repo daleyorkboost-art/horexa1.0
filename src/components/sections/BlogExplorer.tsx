@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Search } from "lucide-react";
 import { BlogCard } from "@/components";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
@@ -55,6 +56,7 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search articles..."
+          aria-label="Search articles"
           className="border-0 bg-transparent focus-visible:ring-0"
         />
         <Button type="button" size="icon" aria-label="Search articles">
@@ -69,6 +71,7 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
             type="button"
             variant={category === item ? "default" : "ghost"}
             size="sm"
+            aria-pressed={category === item}
             onClick={() => setCategory(item)}
           >
             {item}
@@ -97,7 +100,9 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
                 </div>
                 <h3 className="text-h3 font-black">{featured.title}</h3>
                 <p className="text-sm leading-7 text-muted-foreground">{featured.excerpt}</p>
-                <Button className="w-fit">Read Article</Button>
+                <Button asChild className="w-fit">
+                  <Link href={featured.href}>Read Article</Link>
+                </Button>
               </div>
             </Card>
           </section>
@@ -137,6 +142,7 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
                   key={item}
                   type="button"
                   onClick={() => setCategory(item)}
+                  aria-pressed={category === item}
                   className="flex min-h-11 items-center justify-between rounded-lg border border-border px-3 text-left text-sm text-muted-foreground transition hover:border-primary hover:text-primary"
                 >
                   {item}
