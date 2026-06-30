@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: ServiceDetailPageProps) {
   const service = await getPublicService(slug);
 
   return {
-    title: service ? `${service.title} | Horexa Solutions` : "Service | Horexa Solutions",
+    title: service ? service.title : "Service",
     description: service?.description,
     alternates: {
       canonical: service ? `/services/${service.slug}` : "/services",
@@ -62,6 +62,18 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
   if (!service) {
     notFound();
   }
+  const serviceTitle = String(service.title);
+  const serviceShortTitle = String(service.shortTitle);
+  const serviceDescription = String(service.description);
+  const serviceImage = String(service.image);
+  const serviceBenefits: string[] = Array.isArray(service.benefits) ? service.benefits.map(String) : [];
+  const serviceIncludes: string[] = Array.isArray(service.includes) ? service.includes.map(String) : [];
+  const serviceFaqs: { question: string; answer: string }[] = Array.isArray(service.faqs)
+    ? service.faqs.map((faq: unknown) => ({
+        question: String((faq as { question?: unknown }).question ?? ""),
+        answer: String((faq as { answer?: unknown }).answer ?? ""),
+      }))
+    : [];
 
   return (
     <SiteFrame activeHref="/services">
@@ -69,8 +81,8 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         data={{
           "@context": "https://schema.org",
           "@type": "Service",
-          name: service.title,
-          description: service.description,
+          name: serviceTitle,
+          description: serviceDescription,
           provider: {
             "@type": "LocalBusiness",
             name: "Horexa Solutions",
@@ -82,7 +94,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: service.faqs.map((faq) => ({
+          mainEntity: serviceFaqs.map((faq) => ({
             "@type": "Question",
             name: faq.question,
             acceptedAnswer: {
@@ -93,12 +105,12 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         }}
       />
       <PageHero
-        activeLabel={service.shortTitle}
+        activeLabel={serviceShortTitle}
         eyebrow="Service Scope"
-        title={service.title}
+        title={serviceTitle}
         highlight="by Horexa"
-        description={service.description}
-        imageSrc={service.image}
+        description={serviceDescription}
+        imageSrc={serviceImage}
       />
 
       <section className="py-20">
@@ -107,7 +119,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             <section>
               <SectionHeading align="left" eyebrow="Business Benefit" title="Visible improvements with documented safety value." />
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
-                {service.benefits.map((benefit) => (
+                {serviceBenefits.map((benefit) => (
                   <Card key={benefit} className="flex items-center gap-4 p-5">
                     <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <CheckCircle2 aria-hidden />
@@ -122,7 +134,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               <SectionHeading align="left" eyebrow="What's Included" title="Clear scope from inspection to handover." />
               <Card className="mt-8 p-6">
                 <ul className="grid gap-4 md:grid-cols-2">
-                  {service.includes.map((item) => (
+                  {serviceIncludes.map((item) => (
                     <li key={item} className="flex gap-3 text-sm leading-7 text-muted-foreground">
                       <CheckCircle2 className="mt-1 shrink-0 text-primary" aria-hidden />
                       {item}
@@ -160,7 +172,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             <section>
               <SectionHeading align="left" eyebrow="FAQ" title="Common questions." />
               <div className="mt-8">
-                {service.faqs.length ? <FAQAccordion items={service.faqs} /> : <Card className="p-6 text-sm text-muted-foreground">No FAQs have been published for this service yet.</Card>}
+                {serviceFaqs.length ? <FAQAccordion items={serviceFaqs} /> : <Card className="p-6 text-sm text-muted-foreground">No FAQs have been published for this service yet.</Card>}
               </div>
             </section>
           </div>
@@ -169,7 +181,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             <Card className="p-6">
               <h2 className="text-2xl font-black">Schedule Inspection</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Request a quick callback for {service.shortTitle.toLowerCase()}.
+                Request a quick callback for {serviceShortTitle.toLowerCase()}.
               </p>
               <Button asChild className="mt-6 w-full">
                 <Link href="/contact">Request Inspection</Link>

@@ -2,11 +2,17 @@
 
 import type React from "react";
 import { useMemo, useState } from "react";
-import { signIn } from "next-auth/react";
+import {
+  confirmPasswordReset,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { Eye, Lock, Mail, MessageCircle, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getFirebaseClientAuth, googleProvider } from "@/firebase/client";
 import { getCaptchaToken } from "@/lib/security/recaptcha-client";
 
 type LoginMode = "password" | "otp" | "reset";
@@ -20,8 +26,20 @@ export function PortalLoginForm() {
 
   const resetToken = useMemo(() => {
     if (typeof window === "undefined") return "";
-    return new URLSearchParams(window.location.search).get("resetToken") ?? "";
+    return new URLSearchParams(window.location.search).get("oobCode") ?? new URLSearchParams(window.location.search).get("resetToken") ?? "";
   }, []);
+
+  async function establishSession(idToken: string) {
+    const response = await fetch("/api/auth/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to establish secure session");
+    }
+  }
 
   async function handlePasswordLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,22 +47,21 @@ export function PortalLoginForm() {
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
-    const captchaToken = await getCaptchaToken("portal_password_login");
-    const result = await signIn("credentials", {
-      email: String(formData.get("email") ?? ""),
-      password: String(formData.get("password") ?? ""),
-      captchaToken,
-      redirect: false,
-      callbackUrl: "/portal/dashboard",
-    });
+    await getCaptchaToken("portal_password_login");
 
-    if (result?.ok) {
-      window.location.assign(result.url ?? "/portal/dashboard");
+    try {
+      const credential = await signInWithEmailAndPassword(
+        getFirebaseClientAuth(),
+        String(formData.get("email") ?? ""),
+        String(formData.get("password") ?? ""),
+      );
+      await establishSession(await credential.user.getIdToken());
+      window.location.assign("/portal/dashboard");
       return;
+    } catch {
+      setStatus("error");
+      setMessage("Invalid login details or inactive portal account.");
     }
-
-    setStatus("error");
-    setMessage("Invalid login details or inactive portal account.");
   }
 
   async function handleOtpRequest() {
@@ -76,21 +93,24 @@ export function PortalLoginForm() {
 
     const formData = new FormData(event.currentTarget);
     const captchaToken = await getCaptchaToken("portal_otp_login");
-    const result = await signIn("credentials", {
-      email: identifier,
-      otp: String(formData.get("otp") ?? ""),
-      captchaToken,
-      redirect: false,
-      callbackUrl: "/portal/dashboard",
-    });
+    try {
+      const response = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier, otp: String(formData.get("otp") ?? ""), captchaToken }),
+      });
 
-    if (result?.ok) {
-      window.location.assign(result.url ?? "/portal/dashboard");
+      if (!response.ok) {
+        throw new Error("Invalid OTP");
+      }
+
+      setStatus("success");
+      setMessage("OTP verified. Use email/password or Google login to complete Firebase authentication.");
       return;
+    } catch {
+      setStatus("error");
+      setMessage("Invalid or expired OTP.");
     }
-
-    setStatus("error");
-    setMessage("Invalid or expired OTP.");
   }
 
   async function handlePasswordReset(event: React.FormEvent<HTMLFormElement>) {
@@ -99,19 +119,14 @@ export function PortalLoginForm() {
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
-    const captchaToken = await getCaptchaToken(resetToken ? "portal_password_reset_confirm" : "portal_password_reset_request");
-    const endpoint = resetToken ? "/api/auth/password-reset/confirm" : "/api/auth/password-reset/request";
-    const payload = resetToken
-      ? { token: resetToken, password: String(formData.get("password") ?? ""), captchaToken }
-      : { email: String(formData.get("email") ?? ""), captchaToken };
-
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
+    await getCaptchaToken(resetToken ? "portal_password_reset_confirm" : "portal_password_reset_request");
+    try {
+      if (resetToken) {
+        await confirmPasswordReset(getFirebaseClientAuth(), resetToken, String(formData.get("password") ?? ""));
+      } else {
+        await sendPasswordResetEmail(getFirebaseClientAuth(), String(formData.get("email") ?? ""));
+      }
+    } catch {
       setStatus("error");
       setMessage("Unable to process the password reset request.");
       return;
@@ -205,7 +220,22 @@ export function PortalLoginForm() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <Button variant="outline" size="lg" onClick={() => signIn("google", { callbackUrl: "/portal/dashboard" })}>
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={async () => {
+            setStatus("submitting");
+            setMessage("");
+            try {
+              const credential = await signInWithPopup(getFirebaseClientAuth(), googleProvider());
+              await establishSession(await credential.user.getIdToken());
+              window.location.assign("/portal/dashboard");
+            } catch {
+              setStatus("error");
+              setMessage("Google login could not be completed.");
+            }
+          }}
+        >
           <Mail data-icon="inline-start" />
           Login with Google
         </Button>

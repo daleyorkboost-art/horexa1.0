@@ -3,10 +3,10 @@ import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { isLikelyBot, requestIp, verifyCaptchaToken } from "@/lib/api/spam-protection";
 import { sendCareerApplicationNotification } from "@/lib/email/workflows";
 import { sendEmail } from "@/lib/email/mailer";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { applicationSchema } from "@/lib/validators/admin";
 import { assertSameOrigin } from "@/lib/security/request";
-import { uploadToCloudinary, validateUploadFileSecurity } from "@/lib/storage/cloudinary";
+import { saveLocalUpload, validateUploadFileSecurity } from "@/lib/storage/local-upload";
 
 export async function POST(request: Request) {
   const limited = checkRateLimit(rateLimitKey(request, "public-application"), 3, 10 * 60_000, request);
@@ -28,8 +28,8 @@ export async function POST(request: Request) {
     }
 
     const data = applicationSchema.parse(body);
-    const career = data.careerId ? await prisma.career.findUnique({ where: { id: data.careerId } }) : null;
-    const application = await prisma.application.create({ data });
+    const career = data.careerId ? await firestoreModels.career.findUnique({ where: { id: data.careerId } }) : null;
+    const application = await firestoreModels.application.create({ data });
 
     await Promise.allSettled([
       sendEmail({
@@ -70,8 +70,8 @@ async function parseApplicationForm(request: Request) {
       throw new Error(validationError);
     }
 
-    const result = await uploadToCloudinary(file, "horexa/resumes");
-    resumeUrl = result.secure_url;
+    const result = await saveLocalUpload(file, "careers/resumes");
+    resumeUrl = result.url;
   }
 
   return {

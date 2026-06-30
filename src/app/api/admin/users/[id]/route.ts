@@ -1,9 +1,9 @@
-import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
+import { adminAuth } from "@/firebase/admin";
 import { assertSameOrigin } from "@/lib/security/request";
 import { userUpdateSchema } from "@/lib/validators/admin";
 
@@ -16,7 +16,7 @@ export async function GET(_request: Request, context: RouteContext) {
   if (!auth.ok) return auth.response;
 
   const { id } = await context.params;
-  const user = await prisma.user.findUnique({
+  const user = await firestoreModels.user.findUnique({
     where: { id },
     select: {
       id: true,
@@ -46,14 +46,22 @@ export async function PATCH(request: Request, context: RouteContext) {
     const { id } = await context.params;
     const body = await parseJson(request);
     const { password, email, ...data } = userUpdateSchema.parse(body);
-    const passwordHash = password ? await hash(password, 12) : undefined;
+    await adminAuth().updateUser(id, {
+      ...(email ? { email: email.toLowerCase() } : {}),
+      ...(password ? { password } : {}),
+      ...(data.name ? { displayName: data.name } : {}),
+      ...(data.phone ? { phoneNumber: data.phone } : {}),
+      ...(data.isActive !== undefined ? { disabled: data.isActive === false } : {}),
+    });
+    if (data.role) {
+      await adminAuth().setCustomUserClaims(id, { role: data.role });
+    }
 
-    const user = await prisma.user.update({
+    const user = await firestoreModels.user.update({
       where: { id },
       data: {
         ...data,
         ...(email ? { email: email.toLowerCase() } : {}),
-        ...(passwordHash ? { passwordHash } : {}),
       },
       select: {
         id: true,
@@ -86,7 +94,8 @@ export async function DELETE(_request: Request, context: RouteContext) {
   try {
     assertSameOrigin(_request);
     const { id } = await context.params;
-    await prisma.user.delete({ where: { id } });
+    await adminAuth().deleteUser(id).catch(() => undefined);
+    await firestoreModels.user.delete({ where: { id } });
     await writeAuditLog({
       actorId: auth.session.user?.id,
       action: "DELETE",

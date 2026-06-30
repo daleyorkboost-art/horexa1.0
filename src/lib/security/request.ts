@@ -26,7 +26,7 @@ export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
   const allowed = new Set(
-    [process.env.NEXTAUTH_URL, process.env.NEXT_PUBLIC_SITE_URL, host ? `https://${host}` : null, host ? `http://${host}` : null]
+    [process.env.NEXT_PUBLIC_SITE_URL, host ? `https://${host}` : null, host ? `http://${host}` : null]
       .filter(Boolean)
       .map((value) => new URL(String(value)).origin),
   );

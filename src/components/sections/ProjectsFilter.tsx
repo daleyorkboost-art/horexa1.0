@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const categories = ["All", "Duct Cleaning", "Hood & Filter", "Ventilation", "Water Tank", "AMC Projects"];
 
 type Project = {
+  id?: string;
   title: string;
   location: string;
   duration: string;
@@ -43,7 +44,7 @@ export function ProjectsFilter({ projects }: { projects: Project[] }) {
       <div className="grid gap-6 lg:grid-cols-2">
         {filteredProjects.map((project) => (
           <ProjectCard
-            key={project.title}
+            key={project.id ?? `${project.title}-${project.location}`}
             title={project.title}
             location={project.location}
             duration={project.duration}

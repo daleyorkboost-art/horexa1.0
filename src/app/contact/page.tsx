@@ -43,6 +43,7 @@ export default async function ContactPage() {
     { label: "Email Us", value: contact.email, helper: "For general inquiries", icon: Mail },
     { label: "Headquarters", value: contact.headquarters, helper: "Serving major Indian cities", icon: MapPin },
   ].filter((item) => item.value);
+  const serviceOptions = services.map((service) => ({ id: service.slug, title: service.title }));
 
   return (
     <SiteFrame activeHref="/contact">
@@ -85,7 +86,7 @@ export default async function ContactPage() {
               </Link>
             </Button>
           </div>
-          <ContactForm services={services} amcPlans={amcPlans} sourcePage="/contact" defaultService="Inspection Request" mode="inspection" />
+          <ContactForm services={serviceOptions} amcPlans={amcPlans} sourcePage="/contact" defaultService="Inspection Request" mode="inspection" />
         </div>
       </section>
 

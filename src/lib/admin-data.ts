@@ -421,7 +421,7 @@ export const adminModules: AdminModule[] = [
     key: "media",
     title: "Media",
     href: "/admin/media",
-    description: "Upload, search, and manage Cloudinary-backed media assets.",
+    description: "Upload, search, and manage locally stored media assets.",
     icon: Image,
     endpoint: "/api/admin/uploads",
     primaryAction: "Register Media",

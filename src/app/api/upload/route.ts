@@ -1,9 +1,9 @@
 import { apiError, created } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
-import { uploadToCloudinary, validateUploadFileSecurity } from "@/lib/storage/cloudinary";
+import { saveLocalUpload, validateUploadFileSecurity } from "@/lib/storage/local-upload";
 
 export async function POST(request: Request) {
   const auth = await requireRoles([...roleGroups.admin, "CLIENT"]);
@@ -26,12 +26,12 @@ export async function POST(request: Request) {
       return Response.json({ error: validationError }, { status: 422 });
     }
 
-    const result = await uploadToCloudinary(file, folder);
-    const asset = await prisma.uploadAsset.create({
+    const result = await saveLocalUpload(file, folder);
+    const asset = await firestoreModels.uploadAsset.create({
       data: {
-        url: result.secure_url,
-        publicId: result.public_id,
-        resourceType: result.resource_type,
+        url: result.url,
+        publicId: result.publicId,
+        resourceType: result.resourceType,
         bytes: result.bytes,
         format: result.format,
         folder,
@@ -58,9 +58,9 @@ export async function POST(request: Request) {
 
     return created({
       id: asset.id,
-      url: result.secure_url,
-      publicId: result.public_id,
-      resourceType: result.resource_type,
+      url: result.url,
+      publicId: result.publicId,
+      resourceType: result.resourceType,
       bytes: result.bytes,
       format: result.format,
     });

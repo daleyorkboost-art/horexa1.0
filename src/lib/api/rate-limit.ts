@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 type Bucket = {
   count: number;
@@ -18,7 +18,7 @@ export function checkRateLimit(key: string, limit = 10, windowMs = 60_000, reque
   }
 
   if (bucket.count >= limit) {
-    void prisma.rateLimitEvent
+    void firestoreModels.rateLimitEvent
       .create({
         data: {
           key,
@@ -67,7 +67,7 @@ export async function recordAndCheckRateLimit({
   const ipAddress = request?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request?.headers.get("x-real-ip") ?? undefined;
   const userAgent = request?.headers.get("user-agent") ?? undefined;
 
-  const count = await prisma.rateLimitEvent.count({
+  const count = await firestoreModels.rateLimitEvent.count({
     where: {
       key,
       scope,
@@ -75,7 +75,7 @@ export async function recordAndCheckRateLimit({
     },
   });
 
-  await prisma.rateLimitEvent
+  await firestoreModels.rateLimitEvent
     .create({
       data: {
         key,

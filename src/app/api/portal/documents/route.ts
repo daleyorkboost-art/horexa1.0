@@ -2,9 +2,9 @@ import { apiError, created, ok } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
-import { uploadToCloudinary, validateUploadFileSecurity } from "@/lib/storage/cloudinary";
+import { saveLocalUpload, validateUploadFileSecurity } from "@/lib/storage/local-upload";
 import { portalDocumentUploadSchema } from "@/lib/validators/portal";
 
 export async function GET() {
@@ -14,7 +14,7 @@ export async function GET() {
   const scope = await resolveClientScope(auth);
   const where = "clientId" in scope ? { clientId: scope.clientId } : undefined;
 
-  const documents = await prisma.document.findMany({
+  const documents = await firestoreModels.document.findMany({
     where,
     orderBy: { createdAt: "desc" },
   });
@@ -49,26 +49,26 @@ export async function POST(request: Request) {
       return Response.json({ error: validationError }, { status: 422 });
     }
 
-    const result = await uploadToCloudinary(file, `horexa/clients/${scope.clientId}/documents`);
-    const [document, asset] = await prisma.$transaction([
-      prisma.document.create({
+    const result = await saveLocalUpload(file, `clients/${scope.clientId}/documents`);
+    const [document, asset] = await firestoreModels.$transaction([
+      firestoreModels.document.create({
         data: {
           ...data,
           clientId: scope.clientId,
-          fileUrl: result.secure_url,
+          fileUrl: result.url,
           fileType: file.type,
           fileSize: result.bytes,
           uploadedBy: auth.session.user?.email ?? auth.session.user?.id,
         },
       }),
-      prisma.uploadAsset.create({
+      firestoreModels.uploadAsset.create({
         data: {
-          url: result.secure_url,
-          publicId: result.public_id,
-          resourceType: result.resource_type,
+          url: result.url,
+          publicId: result.publicId,
+          resourceType: result.resourceType,
           bytes: result.bytes,
           format: result.format,
-          folder: `horexa/clients/${scope.clientId}/documents`,
+          folder: `clients/${scope.clientId}/documents`,
           ownerType: "DOCUMENT",
           ownerId: scope.clientId,
           mimeType: file.type,

@@ -2,7 +2,7 @@ import { apiError, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
 import { portalProfileSchema } from "@/lib/validators/portal";
 
@@ -13,7 +13,7 @@ export async function GET() {
   const scope = await resolveClientScope(auth);
   const client =
     "clientId" in scope
-      ? await prisma.client.findUnique({ where: { id: scope.clientId }, include: { user: true, amcPlan: true } })
+      ? await firestoreModels.client.findUnique({ where: { id: scope.clientId }, include: { user: true, amcPlan: true } })
       : null;
 
   return ok({ client, user: auth.session.user });
@@ -31,7 +31,7 @@ export async function PATCH(request: Request) {
     }
 
     const data = portalProfileSchema.parse(await parseJson(request));
-    const client = await prisma.client.update({
+    const client = await firestoreModels.client.update({
       where: { id: scope.clientId },
       data: {
         companyName: data.companyName,

@@ -1,7 +1,6 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth/options";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
+import { getCurrentUser } from "@/firebase/auth";
 
 export const roleGroups = {
   admin: ["SUPER_ADMIN", "ADMIN", "EDITOR", "OPERATIONS"],
@@ -28,10 +27,10 @@ const adminRolePermissions: Record<string, AdminPermission[]> = {
 };
 
 export async function requireRoles(allowedRoles: readonly string[]) {
-  const session = await getServerSession(authOptions);
-  const role = session?.user?.role;
+  const user = await getCurrentUser();
+  const role = user?.role;
 
-  if (!session?.user?.email || !role) {
+  if (!user?.email || !role || user.isActive === false) {
     return {
       ok: false as const,
       response: NextResponse.json({ error: "Authentication required" }, { status: 401 }),
@@ -47,7 +46,7 @@ export async function requireRoles(allowedRoles: readonly string[]) {
 
   return {
     ok: true as const,
-    session,
+    session: { user },
     role,
   };
 }
@@ -78,7 +77,7 @@ export async function requireClientPermission(clientId: string, permission: Clie
 
   const userId = auth.session.user?.id;
   const client = userId
-    ? await prisma.client.findFirst({
+    ? await firestoreModels.client.findFirst({
         where: {
           id: clientId,
           portalEnabled: true,

@@ -2,7 +2,7 @@ import { apiError, created, parseJson } from "@/lib/api/response";
 import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { isLikelyBot } from "@/lib/api/spam-protection";
 import { sendNewsletterWelcome } from "@/lib/email/workflows";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
 import { newsletterSchema } from "@/lib/validators/admin";
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     const data = newsletterSchema.parse(body);
-    const subscription = await prisma.newsletterSubscription.upsert({
+    const subscription = await firestoreModels.newsletterSubscription.upsert({
       where: { email: data.email.toLowerCase() },
       update: {
         name: data.name,

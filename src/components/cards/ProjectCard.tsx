@@ -41,8 +41,8 @@ export function ProjectCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
         <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
-          {services.map((service) => (
-            <Badge key={service} variant="secondary" className="bg-background/80 text-foreground backdrop-blur">
+          {services.map((service, index) => (
+            <Badge key={`${service}-${index}`} variant="secondary" className="bg-background/80 text-foreground backdrop-blur">
               {service}
             </Badge>
           ))}

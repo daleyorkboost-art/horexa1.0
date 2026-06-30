@@ -36,6 +36,7 @@ const comparisonRows = [
 
 export default async function AMCPlansPage() {
   const [amcPlans, services] = await Promise.all([getPublicAmcPlans(), getPublicServices()]);
+  const serviceOptions = services.map((service) => ({ id: service.slug, title: service.title }));
 
   return (
     <SiteFrame activeHref="/amc-plans">
@@ -90,7 +91,7 @@ export default async function AMCPlansPage() {
                   {comparisonRows.map((row) => (
                     <tr key={row[0]} className="border-b border-border last:border-b-0">
                       {row.map((cell, index) => (
-                        <td key={cell} className="px-6 py-5 text-muted-foreground">
+                        <td key={`${row[0]}-${index}`} className="px-6 py-5 text-muted-foreground">
                           <span className={index === 0 ? "font-black text-foreground" : ""}>{cell}</span>
                         </td>
                       ))}
@@ -124,7 +125,7 @@ export default async function AMCPlansPage() {
               )}
             </div>
           </div>
-          <ContactForm services={services} amcPlans={amcPlans} sourcePage="/amc-plans" defaultService="AMC Inquiry" mode="amc" />
+          <ContactForm services={serviceOptions} amcPlans={amcPlans} sourcePage="/amc-plans" defaultService="AMC Inquiry" mode="amc" />
         </div>
       </section>
     </SiteFrame>

@@ -1,7 +1,7 @@
 import { ok } from "@/lib/api/response";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 export async function GET() {
   const auth = await requireRoles(roleGroups.client);
@@ -10,7 +10,7 @@ export async function GET() {
   const scope = await resolveClientScope(auth);
   const where = "clientId" in scope ? { clientId: scope.clientId } : undefined;
 
-  const records = await prisma.complianceRecord.findMany({
+  const records = await firestoreModels.complianceRecord.findMany({
     where,
     orderBy: { checkedAt: "desc" },
     include: { report: true },

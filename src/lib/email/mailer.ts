@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
-import type { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 function cleanHeaderValue(value: string) {
   return value.replace(/[\r\n]/g, " ").trim();
@@ -43,13 +42,13 @@ export async function sendEmail({
   const transporter = createTransporter();
   const cleanTo = cleanHeaderValue(to);
   const cleanSubject = cleanHeaderValue(subject);
-  const log = await prisma.emailLog
+  const log = await firestoreModels.emailLog
     .create({
       data: {
         to: cleanTo,
         subject: cleanSubject,
         status: "QUEUED",
-        metadata: metadata as Prisma.InputJsonValue | undefined,
+        metadata,
       },
     })
     .catch(() => null);
@@ -57,7 +56,7 @@ export async function sendEmail({
   if (!transporter) {
     console.warn("SMTP is not configured. Skipping email:", cleanSubject);
     if (log) {
-      await prisma.emailLog.update({
+      await firestoreModels.emailLog.update({
         where: { id: log.id },
         data: { status: "SKIPPED" },
       });
@@ -77,7 +76,7 @@ export async function sendEmail({
     });
 
     if (log) {
-      await prisma.emailLog.update({
+      await firestoreModels.emailLog.update({
         where: { id: log.id },
         data: {
           status: "SENT",
@@ -91,7 +90,7 @@ export async function sendEmail({
     return result;
   } catch (error) {
     if (log) {
-      await prisma.emailLog.update({
+      await firestoreModels.emailLog.update({
         where: { id: log.id },
         data: {
           status: "FAILED",

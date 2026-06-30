@@ -1,15 +1,18 @@
-import { cached, apiError } from "@/lib/api/response";
-import { prisma } from "@/lib/db";
+import { cached } from "@/lib/api/response";
+import { firestoreModels } from "@/firebase/firestore";
+import { getPublicContactSettings } from "@/lib/public-data";
+import { warnUnlessMissingFirebaseAdmin } from "@/lib/api/public-content";
 
 export async function GET() {
   try {
     const [settings, seo] = await Promise.all([
-      prisma.websiteSetting.findMany(),
-      prisma.seoMetadata.findMany({ where: { status: "ACTIVE" } }),
+      firestoreModels.websiteSetting.findMany(),
+      firestoreModels.seoMetadata.findMany({ where: { status: "ACTIVE" } }),
     ]);
 
     return cached({ settings, seo }, 300);
   } catch (error) {
-    return apiError(error);
+    warnUnlessMissingFirebaseAdmin("Public settings API fallback used", error);
+    return cached({ settings: [{ key: "contact", value: await getPublicContactSettings() }], seo: [] }, 300);
   }
 }

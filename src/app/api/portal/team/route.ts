@@ -3,7 +3,7 @@ import { apiError, created, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { sendEmail } from "@/lib/email/mailer";
 import { assertSameOrigin } from "@/lib/security/request";
 import { portalTeamMemberSchema } from "@/lib/validators/portal";
@@ -19,7 +19,7 @@ export async function GET() {
   const scope = await resolveClientScope(auth);
   const where = "clientId" in scope ? { clientId: scope.clientId } : undefined;
 
-  const members = await prisma.clientMember.findMany({
+  const members = await firestoreModels.clientMember.findMany({
     where,
     include: { user: true },
     orderBy: { createdAt: "desc" },
@@ -43,9 +43,9 @@ export async function POST(request: Request) {
     const clientId = String(scope.clientId);
     const email = data.email.toLowerCase();
     const password = temporaryPassword();
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await firestoreModels.user.findUnique({ where: { email } });
 
-    const user = await prisma.user.upsert({
+    const user = await firestoreModels.user.upsert({
       where: { email },
       update: {
         name: data.name,
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       },
     });
 
-    const member = await prisma.clientMember.upsert({
+    const member = await firestoreModels.clientMember.upsert({
       where: { clientId_userId: { clientId, userId: user.id } },
       update: {
         title: data.title || null,

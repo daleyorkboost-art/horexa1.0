@@ -1,7 +1,7 @@
 import { hash } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { checkPersistentRateLimit, checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { sendEmail } from "@/lib/email/mailer";
 import { assertCaptcha, assertSameOrigin } from "@/lib/security/request";
 import { otpRequestSchema } from "@/lib/validators/admin";
@@ -21,13 +21,13 @@ export async function POST(request: Request) {
     const normalized = identifier;
     const otp = String(Math.floor(100000 + Math.random() * 900000));
     const tokenHash = await hash(otp, 12);
-    const user = await prisma.user.findFirst({
+    const user = await firestoreModels.user.findFirst({
       where: {
         OR: [{ email: normalized }, { phone: normalized }],
       },
     });
 
-    await prisma.oTPToken.create({
+    await firestoreModels.oTPToken.create({
       data: {
         userId: user?.id,
         identifier: normalized,

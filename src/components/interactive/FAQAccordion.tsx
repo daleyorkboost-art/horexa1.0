@@ -13,7 +13,7 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
   return (
     <Accordion type="single" collapsible className="surface-card px-6">
       {items.map((item, index) => (
-        <AccordionItem key={item.question} value={`item-${index}`}>
+        <AccordionItem key={`${item.question}-${item.answer}-${index}`} value={`item-${index}`}>
           <AccordionTrigger>{item.question}</AccordionTrigger>
           <AccordionContent>{item.answer}</AccordionContent>
         </AccordionItem>

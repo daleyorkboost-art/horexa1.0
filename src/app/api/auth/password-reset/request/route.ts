@@ -1,8 +1,7 @@
-import { randomBytes } from "crypto";
-import { hash } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { checkPersistentRateLimit, checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
+import { adminAuth } from "@/firebase/admin";
 import { sendEmail } from "@/lib/email/mailer";
 import { assertCaptcha, assertSameOrigin } from "@/lib/security/request";
 import { passwordResetRequestSchema } from "@/lib/validators/admin";
@@ -19,24 +18,17 @@ export async function POST(request: Request) {
     const identifierLimit = await checkPersistentRateLimit(`password-reset:${email}`, "password-reset-request", 3, 30 * 60_000, request);
     if (identifierLimit) return identifierLimit;
     const normalized = email;
-    const user = await prisma.user.findUnique({ where: { email: normalized } });
+    const user = await firestoreModels.user.findUnique({ where: { email: normalized } });
 
     if (user) {
-      const token = randomBytes(32).toString("hex");
-      const tokenHash = await hash(token, 12);
-      await prisma.passwordResetToken.create({
-        data: {
-          userId: user.id,
-          tokenHash,
-          expiresAt: new Date(Date.now() + 30 * 60_000),
-        },
+      const resetUrl = await adminAuth().generatePasswordResetLink(normalized, {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/portal/login`,
+        handleCodeInApp: false,
       });
-
-      const resetUrl = `${process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/portal/login?resetToken=${token}`;
       await sendEmail({
         to: normalized,
         subject: "Reset your Horexa password",
-        html: `<p>Use this secure link to reset your password: <a href="${resetUrl}">${resetUrl}</a></p><p>This link expires in 30 minutes.</p>`,
+        html: `<p>Use this secure Firebase link to reset your password: <a href="${resetUrl}">${resetUrl}</a></p>`,
       });
     }
 

@@ -2,7 +2,7 @@ import { apiError, created, ok, parseJson } from "@/lib/api/response";
 import { writeAuditLog } from "@/lib/api/audit";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { sendEmail } from "@/lib/email/mailer";
 import { assertSameOrigin } from "@/lib/security/request";
 import { supportTicketSchema } from "@/lib/validators/admin";
@@ -14,7 +14,7 @@ export async function GET() {
   const scope = await resolveClientScope(auth);
   const where = "clientId" in scope ? { clientId: scope.clientId } : undefined;
 
-  const tickets = await prisma.ticket.findMany({
+  const tickets = await firestoreModels.ticket.findMany({
     where,
     orderBy: { createdAt: "desc" },
   });
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     const data = supportTicketSchema.parse(body);
     const scope = await resolveClientScope(auth);
 
-    const ticket = await prisma.ticket.create({
+    const ticket = await firestoreModels.ticket.create({
       data: {
         ...data,
         clientId: "clientId" in scope ? scope.clientId : data.clientId,
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL ?? process.env.SMTP_USER;
 
     await Promise.allSettled([
-      prisma.notification.create({
+      firestoreModels.notification.create({
         data: {
           userId: auth.session.user?.id,
           type: "TICKET",

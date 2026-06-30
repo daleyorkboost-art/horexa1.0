@@ -1,7 +1,7 @@
 import { ok, apiError } from "@/lib/api/response";
 import { buildSearchWhere, paginationMeta, parseListQuery } from "@/lib/api/query";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 export async function GET(request: Request) {
   const auth = await requireRoles(roleGroups.superAdmin);
@@ -12,14 +12,14 @@ export async function GET(request: Request) {
     const searchWhere = buildSearchWhere(query.searchTerm, ["entity", "entityId", "ipAddress"]);
     const where = searchWhere ?? undefined;
     const [items, total] = await Promise.all([
-      prisma.auditLog.findMany({
+      firestoreModels.auditLog.findMany({
         where,
         take: query.take,
         skip: query.skip,
         orderBy: { createdAt: "desc" },
         include: { actor: { select: { id: true, name: true, email: true, role: true } } },
       }),
-      prisma.auditLog.count({ where }),
+      firestoreModels.auditLog.count({ where }),
     ]);
 
     return ok({ items, pagination: paginationMeta(total, query.page, query.pageSize) });

@@ -1,7 +1,7 @@
 import { compare } from "bcryptjs";
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { checkPersistentRateLimit, checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
 import { otpVerifySchema } from "@/lib/validators/admin";
 
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const identifierLimit = await checkPersistentRateLimit(`otp-verify:${identifier}`, "otp-verify", 8, 10 * 60_000, request);
     if (identifierLimit) return identifierLimit;
     const normalized = identifier;
-    const token = await prisma.oTPToken.findFirst({
+    const token = await firestoreModels.oTPToken.findFirst({
       where: {
         identifier: normalized,
         consumedAt: null,
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Invalid or expired OTP" }, { status: 401 });
     }
 
-    await prisma.oTPToken.update({
+    await firestoreModels.oTPToken.update({
       where: { id: token.id },
       data: { consumedAt: new Date() },
     });

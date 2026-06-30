@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { siteUrl } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "/contact", priority: 0.85, changeFrequency: "monthly" as const },
   ];
 
-  const services = await prisma.service
+  const services = await firestoreModels.service
     .findMany({
       where: { status: { in: ["ACTIVE", "PUBLISHED"] } },
       select: { slug: true, updatedAt: true },

@@ -1,7 +1,7 @@
 import { ok } from "@/lib/api/response";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 export async function GET() {
   const auth = await requireRoles(roleGroups.client);
@@ -12,11 +12,11 @@ export async function GET() {
 
   const clientWhere = client ? { clientId: client.id } : undefined;
   const [totalInspections, openTickets, recentInspections, compliance, documents] = await Promise.all([
-    prisma.inspectionReport.count({ where: clientWhere }),
-    prisma.ticket.count({ where: { ...clientWhere, status: { in: ["OPEN", "WAITING"] } } }),
-    prisma.inspectionReport.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),
-    prisma.complianceRecord.findMany({ where: clientWhere, take: 8, orderBy: { checkedAt: "desc" } }),
-    prisma.document.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),
+    firestoreModels.inspectionReport.count({ where: clientWhere }),
+    firestoreModels.ticket.count({ where: { ...clientWhere, status: { in: ["OPEN", "WAITING"] } } }),
+    firestoreModels.inspectionReport.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),
+    firestoreModels.complianceRecord.findMany({ where: clientWhere, take: 8, orderBy: { checkedAt: "desc" } }),
+    firestoreModels.document.findMany({ where: clientWhere, take: 5, orderBy: { createdAt: "desc" } }),
   ]);
 
   const complianceScore = compliance.length
@@ -28,7 +28,7 @@ export async function GET() {
     metrics: {
       totalInspections,
       complianceScore,
-      nextInspection: await prisma.inspectionReport.findFirst({
+      nextInspection: await firestoreModels.inspectionReport.findFirst({
         where: { ...clientWhere, status: "SCHEDULED", scheduledAt: { gte: new Date() } },
         orderBy: { scheduledAt: "asc" },
       }),

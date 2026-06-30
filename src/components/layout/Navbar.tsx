@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { mainNavigation } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
@@ -19,14 +20,8 @@ export function Navbar({ activeHref = "/", ctaHref = "/contact" }: NavbarProps) 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-[#07080b]/95 backdrop-blur-xl">
       <div className="industrial-container flex h-[4.75rem] items-center justify-between gap-6 py-3">
-        <Link href="/" className="group flex flex-col leading-none" aria-label="Horexa Solutions home">
-          <span className="text-2xl font-black uppercase tracking-[0.12em] text-foreground">
-            Hore<span className="text-primary">x</span>a
-          </span>
-          <span className="text-[0.6rem] font-bold uppercase tracking-[0.34em] text-muted-foreground">Solutions</span>
-          <span className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-            Clean Air. <span className="text-primary">Safe Kitchens.</span>
-          </span>
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Horexa Solutions home">
+          <BrandLogo priority />
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">

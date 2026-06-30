@@ -22,6 +22,8 @@ const categories = [
 ];
 
 type BlogPost = {
+  id?: string;
+  slug?: string;
   title: string;
   excerpt: string;
   category: string;
@@ -112,10 +114,10 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
             <div className="mt-5 grid gap-6 md:grid-cols-2">
               {posts.map((post) => (
                 <BlogCard
-                  key={post.title}
+                  key={post.id ?? post.slug ?? post.href}
                   {...post}
                   image={{ src: post.image, alt: post.title }}
-                  href="/blog"
+                  href={post.href}
                 />
               ))}
             </div>
@@ -127,7 +129,7 @@ export function BlogExplorer({ blogPosts }: { blogPosts: BlogPost[] }) {
             <h2 className="text-xl font-black">Popular Posts</h2>
             <div className="mt-5 flex flex-col gap-4">
               {blogPosts.slice(1, 5).map((post) => (
-                <article key={post.title} className="border-b border-border pb-4 last:border-b-0 last:pb-0">
+                <article key={post.id ?? post.slug ?? post.href} className="border-b border-border pb-4 last:border-b-0 last:pb-0">
                   <h3 className="text-sm font-bold leading-6">{post.title}</h3>
                   <p className="mt-1 text-xs text-muted-foreground">{post.date}</p>
                 </article>

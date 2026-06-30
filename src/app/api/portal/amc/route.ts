@@ -1,7 +1,7 @@
 import { ok } from "@/lib/api/response";
 import { resolveClientScope } from "@/lib/auth/portal-access";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 export async function GET() {
   const auth = await requireRoles(roleGroups.client);
@@ -9,27 +9,27 @@ export async function GET() {
 
   const scope = await resolveClientScope(auth);
   const clientWhere = "clientId" in scope ? { clientId: scope.clientId } : undefined;
-  const client =
-    "client" in scope
-      ? await prisma.client.findUnique({ where: { id: scope.clientId }, include: { amcPlan: true } })
-      : null;
+  const client = "client" in scope ? scope.client : null;
+  const clientRecord = client && typeof client === "object" ? (client as Record<string, unknown>) : {};
+  const amcPlanId = typeof clientRecord.amcPlanId === "string" ? clientRecord.amcPlanId : undefined;
 
-  const [nextService, serviceHistory, invoices] = await Promise.all([
-    prisma.inspectionReport.findFirst({
+  const [plan, nextService, serviceHistory, invoices] = await Promise.all([
+    amcPlanId ? firestoreModels.aMCPlan.findUnique({ where: { id: amcPlanId } }) : Promise.resolve(null),
+    firestoreModels.inspectionReport.findFirst({
       where: { ...clientWhere, status: "SCHEDULED", scheduledAt: { gte: new Date() } },
       orderBy: { scheduledAt: "asc" },
     }),
-    prisma.inspectionReport.findMany({
+    firestoreModels.inspectionReport.findMany({
       where: clientWhere,
       orderBy: [{ completedAt: "desc" }, { createdAt: "desc" }],
       take: 20,
     }),
-    prisma.invoice.findMany({
+    firestoreModels.invoice.findMany({
       where: clientWhere,
       orderBy: { createdAt: "desc" },
       take: 10,
     }),
   ]);
 
-  return ok({ client, plan: client?.amcPlan ?? null, nextService, serviceHistory, invoices });
+  return ok({ client, plan, nextService, serviceHistory, invoices });
 }

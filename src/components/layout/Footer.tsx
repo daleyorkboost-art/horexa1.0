@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { serviceAreas, serviceLinks } from "@/lib/navigation";
 
 export function Footer() {
@@ -7,13 +8,8 @@ export function Footer() {
     <footer className="border-t border-border/80 bg-[#07080b]">
       <div className="industrial-container grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="flex flex-col leading-none" aria-label="Horexa Solutions home">
-            <span className="text-3xl font-black uppercase tracking-[0.12em]">
-              Hore<span className="text-primary">x</span>a
-            </span>
-            <span className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-              Clean Air. <span className="text-primary">Safe Kitchens.</span>
-            </span>
+          <Link href="/" className="flex w-fit items-center" aria-label="Horexa Solutions home">
+            <BrandLogo className="w-48" />
           </Link>
           <p className="max-w-sm text-sm leading-7 text-muted-foreground">
             Premium kitchen hygiene, exhaust cleaning, compliance reporting, and AMC maintenance for

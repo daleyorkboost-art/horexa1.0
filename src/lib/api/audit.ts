@@ -1,5 +1,4 @@
-import type { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 type AuditInput = {
   actorId?: string | null;
@@ -12,7 +11,7 @@ type AuditInput = {
 
 export async function writeAuditLog(input: AuditInput) {
   try {
-    await prisma.auditLog.create({
+    await firestoreModels.auditLog.create({
       data: {
         actorId: input.actorId ?? undefined,
         action: input.action,
@@ -20,7 +19,7 @@ export async function writeAuditLog(input: AuditInput) {
         entityId: input.entityId ?? undefined,
         ipAddress: input.request?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? input.request?.headers.get("x-real-ip") ?? undefined,
         userAgent: input.request?.headers.get("user-agent") ?? undefined,
-        metadata: input.metadata as Prisma.InputJsonValue | undefined,
+        metadata: input.metadata,
       },
     });
   } catch (error) {

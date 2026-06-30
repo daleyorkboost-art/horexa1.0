@@ -1,5 +1,5 @@
 import { ApiError } from "@/lib/api/response";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 
 type PortalAuth = {
   role: string;
@@ -21,7 +21,7 @@ export async function resolveClientScope(auth: PortalAuth) {
     throw new ApiError("Client account is not linked to a user", 403, "CLIENT_SCOPE_REQUIRED");
   }
 
-  const client = await prisma.client.findFirst({
+  const client = await firestoreModels.client.findFirst({
     where: {
       OR: [
         { userId },

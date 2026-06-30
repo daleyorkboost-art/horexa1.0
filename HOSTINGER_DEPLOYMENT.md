@@ -14,13 +14,21 @@
 Configure these in Hostinger before building:
 
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require"
-NEXTAUTH_URL="https://your-domain.com"
-NEXTAUTH_SECRET="generate-a-strong-random-secret"
 NEXT_PUBLIC_SITE_URL="https://your-domain.com"
 
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
+NEXT_PUBLIC_FIREBASE_API_KEY="AIzaSyCCCqCYfGjJ8t9yotJV4ROYqINLUN3bd88"
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="horexa-df7ec.firebaseapp.com"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID="horexa-df7ec"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="horexa-df7ec.firebasestorage.app"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="1013205942586"
+NEXT_PUBLIC_FIREBASE_APP_ID="1:1013205942586:web:4c3e9c285ce5474d199003"
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID="G-WM1DF2Z3BV"
+
+FIREBASE_PROJECT_ID="horexa-df7ec"
+FIREBASE_CLIENT_EMAIL=""
+FIREBASE_PRIVATE_KEY=""
+# Or use this instead of the three variables above:
+FIREBASE_SERVICE_ACCOUNT_JSON=""
 
 SMTP_HOST=""
 SMTP_PORT="587"
@@ -28,10 +36,7 @@ SMTP_USER=""
 SMTP_PASS=""
 SMTP_FROM="Horexa Solutions <noreply@your-domain.com>"
 
-CLOUDINARY_CLOUD_NAME=""
-CLOUDINARY_API_KEY=""
-CLOUDINARY_API_SECRET=""
-
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=""
 RECAPTCHA_SECRET_KEY=""
 
 SEED_ADMIN_EMAIL="admin@your-domain.com"
@@ -39,42 +44,44 @@ SEED_ADMIN_PASSWORD="use-a-12-plus-character-password"
 SEED_ADMIN_NAME="Horexa Super Admin"
 ```
 
-## Database Setup
+Do not commit the Firebase service account JSON. Store it only in Hostinger environment variables.
 
-1. Provision PostgreSQL.
-2. Set `DATABASE_URL`.
-3. Run one of the following from the deployed app shell:
+## Firebase Setup
 
-```bash
-npm run db:push
-```
-
-Use `prisma migrate deploy` instead once migration files are introduced.
-
-Seed the first admin account:
+1. Enable Firebase Authentication providers needed for launch:
+   - Email/password
+   - Google
+   - Phone, only if OTP phone login is required and enabled for the project
+2. Add authorized domains:
+   - `localhost` for local development
+   - your production domain
+3. Create Firestore in production mode.
+4. Add the Firebase Admin service account credentials to the deployment environment.
+5. Seed the first admin:
 
 ```bash
 npm run seed:admin
 ```
 
-## OAuth Setup
+6. Seed starter public content if needed:
 
-In Google Cloud Console, add:
+```bash
+npm run seed:data
+```
 
-- Authorized JavaScript origin: `https://your-domain.com`
-- Authorized redirect URI: `https://your-domain.com/api/auth/callback/google`
+## Upload Storage
 
-Google OAuth is optional. If credentials are not configured, the app disables Google login instead of failing protected routes.
+Uploads are stored locally under `uploads/`. On Hostinger, ensure this directory is writable by the Node.js application process and included in backup strategy.
 
-## Cloudinary Setup
+Recommended folders:
 
-Cloudinary is required for production uploads:
-
-- Admin/media uploads
-- Career resume uploads
-- Client documents and reports
-
-Without Cloudinary credentials, upload endpoints will fail by design.
+- `uploads/services`
+- `uploads/blogs`
+- `uploads/projects`
+- `uploads/reports`
+- `uploads/documents`
+- `uploads/careers`
+- `uploads/logos`
 
 ## Smoke Tests After Deploy
 
@@ -100,6 +107,8 @@ Expected result: `307` or `302` redirect to `/portal/login`, not a `500`.
 ## Production Notes
 
 - Enforce HTTPS in Hostinger/domain settings.
-- Set `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` to the exact production domain.
+- Set `NEXT_PUBLIC_SITE_URL` to the exact production domain.
+- Keep Firebase Admin credentials private.
 - Seed at least one `SUPER_ADMIN` user before handing over admin access.
+- Configure SMTP before testing public forms.
 - Replace remaining reference images with final Horexa project/team/location photography when supplied.

@@ -1,6 +1,6 @@
 import { apiError, ok, parseJson } from "@/lib/api/response";
 import { requireRoles, roleGroups } from "@/lib/auth/rbac";
-import { prisma } from "@/lib/db";
+import { firestoreModels } from "@/firebase/firestore";
 import { assertSameOrigin } from "@/lib/security/request";
 import { portalNotificationUpdateSchema } from "@/lib/validators/portal";
 
@@ -8,7 +8,7 @@ export async function GET() {
   const auth = await requireRoles(roleGroups.client);
   if (!auth.ok) return auth.response;
 
-  const notifications = await prisma.notification.findMany({
+  const notifications = await firestoreModels.notification.findMany({
     where: { userId: auth.session.user?.id },
     orderBy: { createdAt: "desc" },
     take: 50,
@@ -33,8 +33,8 @@ export async function PATCH(request: Request) {
       ...(data.notificationIds?.length ? { id: { in: data.notificationIds } } : {}),
     };
 
-    await prisma.notification.updateMany({ where, data: { readAt } });
-    const notifications = await prisma.notification.findMany({
+    await firestoreModels.notification.updateMany({ where, data: { readAt } });
+    const notifications = await firestoreModels.notification.findMany({
       where: { userId: auth.session.user?.id },
       orderBy: { createdAt: "desc" },
       take: 50,

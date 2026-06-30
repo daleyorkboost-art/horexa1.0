@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ShieldCheck, BarChart3, FileText, Headphones } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { PortalLoginForm } from "@/components/portal/PortalLoginForm";
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { images } from "@/lib/site-data";
 
 export const metadata: Metadata = {
@@ -37,13 +38,8 @@ export default function PortalLoginPage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,13,13,0.96),rgba(13,13,13,0.62))]" />
         <div className="relative z-10 flex min-h-screen flex-col justify-between p-10">
-          <Link href="/" className="flex flex-col leading-none">
-            <span className="text-3xl font-black uppercase tracking-[0.12em]">
-              Hore<span className="text-primary">x</span>a
-            </span>
-            <span className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-              Clean Air. <span className="text-primary">Safe Kitchens.</span>
-            </span>
+          <Link href="/" className="flex w-fit items-center" aria-label="Horexa Solutions home">
+            <BrandLogo className="w-52" priority />
           </Link>
 
           <div className="max-w-xl">
